@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { assets } from "../../assets/assets";
 
 const Contact = () => {
@@ -178,7 +178,7 @@ const Contact = () => {
                     <p className="text-gray-600">
                       Tel: (415) 555-0132
                       <br />
-                      Email: greatstackdev@gmail.com
+                      Email: jenudev@gmail.com
                     </p>
                   </div>
                 </div>

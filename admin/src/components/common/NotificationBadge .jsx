@@ -13,7 +13,7 @@ const NotificationBadge = () => {
     if (dToken) {
       const fetchData = async () => {
         try {
-          // Fetch both count and notifications in parallel
+   
           const [countRes, notificationsRes] = await Promise.all([
             axios.get(`${backendUrl}/api/notifications/count`, {
               headers: { Authorization: `Bearer ${dToken}` },

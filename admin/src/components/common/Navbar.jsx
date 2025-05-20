@@ -4,7 +4,6 @@ import { assets } from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { DoctorContext } from "../../context/DoctorContext";
 import { AdminContext } from "../../context/AdminContext";
-import { Bell } from "lucide-react";
 import NotificationBadge from "./NotificationBadge ";
 
 const Navbar = () => {

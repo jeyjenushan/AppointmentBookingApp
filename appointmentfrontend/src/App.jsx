@@ -76,7 +76,7 @@ const App = () => {
   );
 };
 
-// Move ProtectedRoutes outside to prevent recreation on each render
+
 const ProtectedRoutes = () => {
   const { token } = useContext(AppContext);
   const location = useLocation();

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import  { useContext, useEffect, useState } from "react";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../context/AppContext";
@@ -17,7 +17,7 @@ const Doctors = () => {
         doctors.filter(
           (doc) =>
             doc.specialization.toLowerCase() == specialization.toLowerCase()
-        ) // Added return
+        ) 
       );
     } else {
       setFilterDoc(doctors);

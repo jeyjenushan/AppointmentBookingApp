@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import {  useState } from "react";
 import { assets } from "../../assets/assets";
-import { AdminContext } from "../../../../admin/src/context/AdminContext";
 
 const About = () => {
   const [activeCard, setActiveCard] = useState(0);
@@ -48,7 +47,7 @@ const About = () => {
               <img
                 className="w-full h-auto object-cover"
                 src={assets.about_image}
-                alt="About Prescripto"
+                alt="About JenuCart"
               />
             </div>
           </div>
@@ -59,17 +58,17 @@ const About = () => {
                 Welcome to{" "}
                 <span className="text-[#5f6fff] font-semibold">JenuCare</span>,
                 your trusted partner in managing your healthcare needs
-                conveniently and efficiently. At Prescripto, we understand the
+                conveniently and efficiently. At JenuCart, we understand the
                 challenges individuals face when it comes to scheduling doctor
                 appointments and managing their health records.
               </p>
 
               <p className="text-gray-600 mb-4">
-                Prescripto is committed to excellence in healthcare technology.
+                JenuCart is committed to excellence in healthcare technology.
                 We continuously strive to enhance our platform, integrating the
                 latest advancements to improve user experience and deliver
                 superior service. Whether you're booking your first appointment
-                or managing ongoing care, Prescripto is here to support you
+                or managing ongoing care, JenuCart is here to support you
                 every step of the way.
               </p>
             </div>
@@ -77,7 +76,7 @@ const About = () => {
             <div className="bg-gradient-to-r from-[#5f6fff] to-[#a855f7] p-8 rounded-2xl text-white shadow-lg hover:shadow-xl transition-shadow duration-300">
               <h3 className="text-xl font-bold mb-3">Our Vision</h3>
               <p className="opacity-90">
-                Our vision at Prescripto is to create a seamless healthcare
+                Our vision at JenuCart is to create a seamless healthcare
                 experience for every user. We aim to bridge the gap between
                 patients and healthcare providers, making it easier for you to
                 access the care you need, when you need it.
@@ -94,7 +93,7 @@ const About = () => {
             </span>
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover what makes Prescripto the right choice for your healthcare
+            Discover what makes JenuCart the right choice for your healthcare
             needs
           </p>
         </div>

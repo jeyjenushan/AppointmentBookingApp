@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import  { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 
 const MyProfile = () => {
@@ -43,7 +43,7 @@ const MyProfile = () => {
       setIsEdit(false);
     } catch (error) {
       console.error("Failed to update profile:", error);
-      // Optionally show error to user
+    
     }
   };
 
