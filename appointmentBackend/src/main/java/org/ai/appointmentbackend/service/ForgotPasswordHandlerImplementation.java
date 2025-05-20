@@ -48,14 +48,11 @@ private final EmailService emailService;
             }
             emailService.sendEmail(email,"Your Forgot Password Verification Code\n\n","Your verification code is " + token.getOtp());
 
-
-            response.setStatusCode(200);
-            response.setMessage("Password reset OTP sent successfully");
+            return Response.success("Password reset OTP sent successfully");
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error sending password reset OTP: " + e.getMessage());
+            return Response.error("Error sending password reset OTP: " + e.getMessage(),500);
         }
-        return response;
+
     }
 
     public Response verifyOtp(String email, String otp) {
@@ -63,62 +60,58 @@ private final EmailService emailService;
         try {
             UserEntity userAccount = userRepository.findByEmail(email);
             if (userAccount == null) {
-                response.setStatusCode(404);
-                response.setMessage("User not found with provided email.");
-                return response;
+
+                return Response.error("User not found with provided email.",404);
+
             }
 
             ForgotPasswordToken forgotPasswordToken = forgotPasswordService.findByUser(userAccount.getId());
             if (forgotPasswordToken == null) {
-                response.setStatusCode(404);
-                response.setMessage("Invalid or expired token.");
-                return response;
+
+                return Response.error("Invalid or expired token.",404);
+
             }
 
             if (forgotPasswordToken.getOtp().equals(otp)) {
-                response.setStatusCode(200);
-                response.setMessage("OTP verified successfully.");
+                return Response.success("OTP verified successfully.");
             } else {
-                response.setStatusCode(400);
-                response.setMessage("Wrong OTP provided.");
+                return Response.error("Wrong OTP provided.",400);
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error verifying OTP: " + e.getMessage());
+            return Response.error("Error verifying OTP: " + e.getMessage(),500);
         }
-        return response;
+
     }
 
     public Response resetPassword(String email, String newPassword, String otp) {
         Response response = new Response();
         try {
             if (newPassword.length() <= 4) {
-                response.setStatusCode(400);
-                response.setMessage("Password must be at least 4 characters long.");
-                return response;
+
+                return Response.error("Password must be at least 4 characters long.",404);
+
             }
 
             boolean isVerified = OtpCheck(email, otp);
             if (isVerified) {
                 UserEntity userAccount = userRepository.findByEmail(email);
                 if (userAccount == null) {
-                    response.setStatusCode(404);
-                    response.setMessage("User not found with provided email.");
-                    return response;
+
+                    return Response.error("User not found with provided email.",404);
+
                 }
 
                 updatePassword(userAccount, newPassword);
-                response.setStatusCode(200);
-                response.setMessage("Password updated successfully!");
+                return Response.success("Password updated successfully!");
             } else {
-                response.setStatusCode(400);
-                response.setMessage("Wrong OTP provided.");
+
+                return Response.error("Wrong OTP provided.",400);
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Error resetting password: " + e.getMessage());
+
+            return Response.error("Error resetting password: " + e.getMessage(),500);
         }
-        return response;
+
     }
 
     public void updatePassword(UserEntity userAccount, String newPassword) {

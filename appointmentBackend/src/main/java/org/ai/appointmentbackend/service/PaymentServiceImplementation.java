@@ -69,27 +69,24 @@ public class PaymentServiceImplementation implements PaymentService{
                     emailService.sendDoctorNotification(appointment, paymentDetails);
 
 
-                    response.setStatusCode(200);
-                    response.setMessage("Payment Successfully completed waiting for the doctor completion");
 
-                    // If needed, include appointmentDto in the response
-                    AppointmentDto appointmentDto = DtoConverter.convertAppointmentEntityToAppointmentDto(appointment);
-                    response.setAppointmentDto(appointmentDto);
+                    return Response.success("Payment Successfully completed waiting for the doctor completion").withAppointment(DtoConverter.convertAppointmentEntityToAppointmentDto(appointment));
+
+
 
                 } else {
-                    response.setStatusCode(400);
-                    response.setMessage("Appointment not found");
+
+                    return Response.error("Appointment not found",400);
                 }
             } else {
-                response.setStatusCode(400);
-                response.setMessage("Payment Failed");
+
+                return Response.error("Payment Failed",400);
             }
 
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage(e.getMessage());
+      return Response.error(e.getMessage(),500);
         }
-        return response;
+
     }
 
     @Override
@@ -142,8 +139,7 @@ public class PaymentServiceImplementation implements PaymentService{
             response.setData(Map.of("session_url", session.getUrl()));
 
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage(e.getMessage());
+     return Response.error(e.getMessage(),500);
         }
         return response;
     }

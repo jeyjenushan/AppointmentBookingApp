@@ -66,7 +66,7 @@ public class AuthServiceImplementation implements AuthService {
                 savedPatient = patientRepository.save(savedPatient);
 
                 return Response.success("The patient has been registered successfully").withPatient(DtoConverter.convertPatientEntityToPatientDto(savedPatient))
-                        .withTokenAndRoleAndExpirationTime(jwtTokenProvider.generateToken(user),Role.PATIENT)
+                        .withTokenAndRole(jwtTokenProvider.generateToken(user),Role.PATIENT)
                         ;
             });
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public class AuthServiceImplementation implements AuthService {
                     throw new RuntimeException(e);
                 }
                 return Response.success("The admin has been registered successfully and the admin has been successfully added").withAdmin(DtoConverter.convertAdminEntityToAdminDto(savedAdmin))
-                        .withTokenAndRoleAndExpirationTime(jwtTokenProvider.generateToken(user),Role.ADMIN)
+                        .withTokenAndRole(jwtTokenProvider.generateToken(user),Role.ADMIN)
                         ;
             });
         } catch (Exception e) {
@@ -157,7 +157,7 @@ public class AuthServiceImplementation implements AuthService {
                     throw new RuntimeException(e);
                 }
                 return Response.success("The doctor has been registered successfully").withDoctor(DtoConverter.convertDoctorEntityToDoctorDto(savedDoctor))
-                        .withTokenAndRoleAndExpirationTime(jwtTokenProvider.generateToken(user),Role.DOCTOR)
+                        .withTokenAndRole(jwtTokenProvider.generateToken(user),Role.DOCTOR)
                         ;
             });
         } catch (Exception e) {
@@ -183,12 +183,6 @@ public class AuthServiceImplementation implements AuthService {
 
     }
 
-
-
-
-
-
-    //Login User
     @Override
     public Response LoginUser(LoginRequest loginRequest) {
         Response response = new Response();
@@ -230,20 +224,19 @@ public class AuthServiceImplementation implements AuthService {
                     throw new IllegalArgumentException("Invalid role.");
             }
 
-            // Set the response attributes
-            response.setStatusCode(200);
-            response.setToken(token);
-            response.setRole(userDto.getRole());
-            response.setExpirationTime(String.valueOf(expirationDate));
-            response.setUserDto(userDto);
-            response.setMessage("The account has been logged in successfully.");
+
+
+            return Response.success("The account has been logged in successfully.")
+                    .withUser(userDto)
+                    .withTokenAndRole(token,userDto.getRole())
+                    .withExpirationTime(String.valueOf(expirationDate));
 
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Login failed: " + e.getMessage());
+
+            return Response.error("Login failed: " + e.getMessage(),500);
         }
 
-        return response;
+
     }
 
 

@@ -1,7 +1,5 @@
 package org.ai.appointmentbackend.service;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.ai.appointmentbackend.dto.Response;
 import org.ai.appointmentbackend.entity.DoctorEntity;
 import org.ai.appointmentbackend.enumpack.NotificationType;
@@ -42,6 +40,7 @@ public class AdminServiceImplementation implements AdminService{
                 return Response.error("Invalid time slots provided",400);
             }
 
+
             doctor.setAvailableSlots(weeklySlots);
             doctor=doctorRepository.save(doctor);
 
@@ -66,6 +65,8 @@ public class AdminServiceImplementation implements AdminService{
         if (slots == null || slots.isEmpty()) {
             return false;
         }
+
+
 
         // Define the valid time range (9 AM to 6 PM)
         LocalTime startTime = LocalTime.of(9, 0);

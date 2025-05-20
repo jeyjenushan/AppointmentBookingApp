@@ -287,18 +287,6 @@ public class AppointmentServiceImplementation implements AppointmentService{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     //Book Appointment related Functionalities
     @Override
     public Response bookAppointment(AppointmentRequest appointmentRequest,String token) {
@@ -640,7 +628,6 @@ public Response cancelAppointment(Long appointmentId, String token) {
 
     @Override
     public Response getAppointmentsForPatient(String token) {
-        Response response = new Response();
         try {
             String email=extractUserNameFromToken(token);
             PatientEntity patient=patientRepository.findByUserEmail(email);
@@ -703,26 +690,25 @@ public Response cancelAppointment(Long appointmentId, String token) {
     @Override
     public Response getAppointmentsForDoctor(String email) {
 
-        Response response = new Response();
         try {
             DoctorEntity doctor=doctorRepository.findByUserEmail(email);
 
             List<AppointmentEntity> appointments = appointmentRepository.findByDoctorId(doctor.getId());
 
             if (appointments.isEmpty()) {
-                response.setStatusCode(200);
-                response.setMessage("You don't have any scheduled appointments");
-                return response;
+
+                return Response.success("You don't have any scheduled appointments").withAppointmentList(Collections.emptyList());
+
             }
 
-            response.setStatusCode(200);
-            response.setMessage("Your patient appointments were retrieved successfully");
-            response.setAppointmentDtos(DtoConverter.convertAppointmentEntityListToAppointmentDtoList(appointments));
+
+            return Response.success("Your patient appointments were retrieved successfully").withAppointmentList(DtoConverter.convertAppointmentEntityListToAppointmentDtoList(appointments));
+
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("We're having trouble retrieving your schedule. Please try again later.");
+
+            return Response.error("We're having trouble retrieving your schedule. Please try again later.",500);
         }
-        return response;
+
     }
 
 
@@ -733,20 +719,14 @@ public Response cancelAppointment(Long appointmentId, String token) {
             List<AppointmentEntity> appointments = appointmentRepository.findAll();
 
             if (appointments.isEmpty()) {
-                response.setStatusCode(200);
-                response.setMessage("You don't have any  appointments");
-                response.setAppointmentDtos(Collections.emptyList());
-                return response;
-            }
+                return Response.success("You don't have any  appointments").withAppointmentList(Collections.emptyList());
 
-            response.setStatusCode(200);
-            response.setMessage("Your patient appointments were retrieved successfully");
-            response.setAppointmentDtos(DtoConverter.convertAppointmentEntityListToAppointmentDtoList(appointments));
+            }
+            return Response.success("Your patient appointments were retrieved successfully").withAppointmentList(DtoConverter.convertAppointmentEntityListToAppointmentDtoList(appointments));
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("We're having trouble retrieving appointments. Please try again later.");
+            return Response.error("We're having trouble retrieving your schedule. Please try again later.",500);
         }
-        return response;
+
     }
 
     @Override

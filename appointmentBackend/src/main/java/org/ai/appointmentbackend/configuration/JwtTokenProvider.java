@@ -23,14 +23,6 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    public String extractJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        throw  new IllegalArgumentException("Jwt Token is missing or malformed");
-
-    }
 
     public static SecretKey getSignKey(){
         byte[] keyBytes= Decoders.BASE64.decode(JwtConstant.JWT_SECRET);

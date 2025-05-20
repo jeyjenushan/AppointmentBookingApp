@@ -71,23 +71,23 @@ public class DoctorServiceImplementation implements DoctorService {
         try {
 
             if (email == null || email.trim().isEmpty()) {
-                response.setStatusCode(400);
-                response.setMessage("Doctor email cannot be empty.");
-                return response;
+
+                return Response.error("Doctor email cannot be empty.",400);
+
             }
 
             if (updatedDoctor == null) {
-                response.setStatusCode(400);
-                response.setMessage("Updated doctor details cannot be null.");
-                return response;
+
+                return Response.error("Updated doctor details cannot be null.",400);
+
             }
 
             DoctorEntity existingDoctor = doctorRepository.findByUserEmail(email);
 
             if (existingDoctor == null) {
-                response.setStatusCode(404);
-                response.setMessage("Doctor with the provided email not found.");
-                return response;
+
+                return Response.error("Doctor with the provided email not found.",404);
+
             }
 
             if (updatedDoctor.getUser() != null) {
@@ -140,17 +140,17 @@ public class DoctorServiceImplementation implements DoctorService {
 
             DoctorEntity savedDoctor = doctorRepository.save(existingDoctor);
 
-            response.setStatusCode(200);
-            response.setMessage("Doctor details updated successfully.");
-            response.setDoctorDto(DtoConverter.convertDoctorEntityToDoctorDto(savedDoctor));
+
+            return Response.success("Doctor details updated successfully.").withDoctor(DtoConverter.convertDoctorEntityToDoctorDto(savedDoctor));
+
 
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("An error occurred while updating doctor details. Please try again later.");
+
+            return Response.error("An error occurred while updating doctor details. Please try again later.",500);
 
         }
 
-        return response;
+
     }
 
     private static AddressEntity getAddressEntity(DoctorEntity updatedDoctor, DoctorEntity existingDoctor) {
@@ -185,18 +185,17 @@ public class DoctorServiceImplementation implements DoctorService {
             List<DoctorEntity> matchingDoctors = doctorRepository.findBySpecializationContainingIgnoreCase(cleanedSpecialization);
 
             if (matchingDoctors.isEmpty()) {
-                response.setStatusCode(404);
-                response.setMessage("No doctors found with specialization: " + cleanedSpecialization);
+
+                return Response.error("No doctors found with specialization: " + cleanedSpecialization,404);
             } else {
-                response.setDoctorDtos(DtoConverter.convertDoctorEntityListToDoctorDtoList(matchingDoctors));
-                response.setStatusCode(200);
-                response.setMessage("Doctors with specialization '" + cleanedSpecialization + "' retrieved successfully.");
+
+                return Response.success("Doctors with specialization '" + cleanedSpecialization + "' retrieved successfully.").withDoctorList(DtoConverter.convertDoctorEntityListToDoctorDtoList(matchingDoctors));
             }
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Failed to retrieve doctors by specialization. Please try again later.");
+
+            return Response.error("Failed to retrieve doctors by specialization. Please try again later.",500);
         }
-        return response;
+
     }
 
 

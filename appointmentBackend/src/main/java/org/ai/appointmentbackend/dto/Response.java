@@ -253,12 +253,19 @@ public class Response {
         return this;
     }
 
+    public Response withUser(UserDto userDto) {
+        this.userDto = userDto;
+        return this;
+    }
+
+
     //Response with appointmentdto
     public Response withAppointment(AppointmentDto appointment) {
         this.appointmentDto = appointment;
         this.appointmentDtos = null;
         return this;
     }
+
 
 
     //Response with appointmentdtoslist
@@ -269,11 +276,17 @@ public class Response {
     }
 
     //Response with Token and Role
-    public Response withTokenAndRoleAndExpirationTime(String token, Role role) {
+    public Response withTokenAndRole(String token, Role role) {
         this.token = token;
         this.role = role;
         return this;
     }
+
+    public Response withExpirationTime(String expirationTime) {
+        this.expirationTime = expirationTime;
+        return this;
+    }
+
     public Response withNotification(NotificationDto notification) {
         this.notificationDto = notification;
         this.notificationDtos = null;

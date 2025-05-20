@@ -30,17 +30,15 @@ public class PatientController {
     public PatientController() {
     }
 
-    //admin only
-    @PreAuthorize("hasRole('ADMIN')")
+
     @GetMapping("/allPatients")
     public ResponseEntity<Response> getAllPatients(){
         Response response=patientService.getAllPatients();
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    //admin only or patient them selves
+
     @GetMapping()
-    @PreAuthorize("hasAnyRole('ADMIN', 'PATIENT')")
     public ResponseEntity<Response> getPatientById(@RequestHeader("Authorization") String authorization){
         authorization=authorization.substring(7);
         String email=jwtTokenProvider.extractUsername(authorization);
@@ -51,9 +49,8 @@ public class PatientController {
     }
 
 
-    //admin or patient
+
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PATIENT')")
     public ResponseEntity<Response> updatePatient(@PathVariable Long id,
                                                   @RequestBody PatientEntity patientEntity){
         Response response=patientService.updatePatient(id,patientEntity);

@@ -461,7 +461,7 @@ public class EmailServiceImplementation implements EmailService{
                 "                <p><strong>Doctor:</strong> Dr. " + doctorName + "</p>" +
                 "                <p><strong>Date:</strong> " + date.format(dateFormatter) + "</p>" +
                 "                <p><strong>Time:</strong> " + time.format(timeFormatter) + "</p>" +
-                "                <p><strong>Amount:</strong> ₹" + String.format("%.2f", amount) + "</p>" +
+                "                <p><strong>Amount:</strong> Rs." + String.format("%.2f", amount) + "</p>" +
                 "            </div>" +
                 refundSection +
 
@@ -578,6 +578,8 @@ public class EmailServiceImplementation implements EmailService{
                         <p><strong>Login Credentials:</strong></p>
                         <p>Email: %s</p>
                         <p>Temporary Password: %s</p>
+                        <p>Please use the following link to access your account:</p>
+                                                                          <a href="http://localhost:5174/login" class="button">Login to Your Account</a>
                     </div>
                     
                   
@@ -698,6 +700,8 @@ public class EmailServiceImplementation implements EmailService{
                         <p><strong>Login Credentials:</strong></p>
                         <p>Email: %s</p>
                         <p>Temporary Password: %s</p>
+                            <p>Please use the following link to access your account:</p>
+                                                    <a href="http://localhost:5174/login" class="button">Login to Your Account</a>
                     </div>
                     
                   

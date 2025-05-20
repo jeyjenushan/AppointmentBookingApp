@@ -48,6 +48,7 @@ public class AdminController {
         Response response = authService.RegisterDoctor(doctorEntity,imageFile);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
     @PostMapping(value = "/register/admin", consumes = {"multipart/form-data"})
     public ResponseEntity<Response> adminRegister(  @RequestPart("admin") String adminString,  @RequestPart(value = "image", required = false) MultipartFile imageFile) throws Exception {
         ObjectMapper objectMapper=new ObjectMapper();
@@ -55,17 +56,22 @@ public class AdminController {
         Response response = authService.RegisterAdmin(adminEntity,imageFile);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+
     @GetMapping("/dashboard")
     public ResponseEntity<Response> adminDashboard( ) throws Exception {
           Response response=dashboardService.getDashboardData();
           return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+
     @GetMapping("/allAdmins")
     public ResponseEntity<Response> getAllAdmin( ) throws Exception {
         Response response=dashboardService.getAllAdmins();
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
-    // Set doctor availability slots
+
+
     @PostMapping("/doctors/{doctorId}/availability")
     public ResponseEntity<Response> setDoctorAvailability(
             @PathVariable Long doctorId,
@@ -75,7 +81,8 @@ public class AdminController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    // Get doctor availability
+
+
     @GetMapping("/doctors/{doctorId}/availability")
     public ResponseEntity<Response> getDoctorAvailability(@PathVariable Long doctorId) {
         Response response = adminService.getDoctorAvailability(doctorId);

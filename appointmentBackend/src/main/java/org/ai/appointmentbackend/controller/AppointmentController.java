@@ -3,7 +3,6 @@ package org.ai.appointmentbackend.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import org.ai.appointmentbackend.configuration.JwtTokenProvider;
 import org.ai.appointmentbackend.dto.Response;
-import org.ai.appointmentbackend.enumpack.AppointmentStatus;
 import org.ai.appointmentbackend.request.AppointmentRequest;
 import org.ai.appointmentbackend.request.RescheduleRequest;
 import org.ai.appointmentbackend.service.AppointmentService;
@@ -132,13 +131,7 @@ public class AppointmentController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    // Get appointments by status (Admin only)
-//    @GetMapping("/appointments/status")
-//    public ResponseEntity<Response> getAppointmentsByStatus(
-//            @RequestParam AppointmentStatus status) {
-//        Response response = appointmentService.getAppointmentsByStatus(status);
-//        return ResponseEntity.status(response.getStatusCode()).body(response);
-//    }
+
 
     @GetMapping("/appointments")
     public ResponseEntity<Response> getAllAppointments() {

@@ -43,10 +43,10 @@ public class PatientServiceImplementation implements PatientService{
 
            }
        }catch (Exception e) {
-           response.setStatusCode(500);
-           response.setMessage("Unable to retrieve patients at this time. Please try again later.");
+
+           return Response.error("Unable to retrieve patients at this time. Please try again later.",500);
        }
-       return response;
+
     }
 
     @Override

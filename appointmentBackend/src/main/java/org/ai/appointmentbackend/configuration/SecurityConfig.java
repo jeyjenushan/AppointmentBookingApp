@@ -77,7 +77,7 @@ public class SecurityConfig {
 
                         //patient end points
                         .requestMatchers("/api/pay","/api/verify","/api/appointments/{id}/reschedule",
-                                "/api/patients/appointments","/api/appointments/{id}"
+                                "/api/patients/appointments"
 
                                 ).hasRole("PATIENT")
                         .requestMatchers(HttpMethod.PUT,"/api/patients/{id}").hasAnyRole("PATIENT","ADMIN")

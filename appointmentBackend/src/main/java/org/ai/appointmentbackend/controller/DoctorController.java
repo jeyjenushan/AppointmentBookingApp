@@ -34,13 +34,6 @@ public class DoctorController {
     public DoctorController() {
     }
 
-    //admin only access
-//    @DeleteMapping("/admin/doctors/{id}")
-//    public ResponseEntity<Response> deleteDoctor(@PathVariable Long id) {
-//        Response response = doctorService.deleteDoctor(id);
-//        return ResponseEntity.status(response.getStatusCode()).body(response);
-//    }
-
 
     // Public endpoints
     @GetMapping
@@ -56,7 +49,7 @@ public class DoctorController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    // Doctor and Admin accessible endpoints
+
     @PutMapping("/doctor/update-profile")
     public ResponseEntity<Response> updateDoctor(
             @RequestHeader("Authorization") String authHeader,
@@ -108,8 +101,7 @@ public class DoctorController {
 
 
 
-    //doctors related appointment controller
-    // Get appointment requests
+
     @GetMapping("/appointments/requests")
     public ResponseEntity<Response> getAppointmentRequests(
             @RequestHeader("Authorization") String token) {
@@ -118,7 +110,6 @@ public class DoctorController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    // Approve appointment
     @PutMapping("/appointments/{appointmentId}/approve")
     public ResponseEntity<Response> approveAppointment(
             @PathVariable Long appointmentId,
@@ -129,7 +120,7 @@ public class DoctorController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    // Reject appointment
+
     @PutMapping("/appointments/{appointmentId}/reject")
     public ResponseEntity<Response> rejectAppointment(
             @PathVariable Long appointmentId,
@@ -141,7 +132,7 @@ public class DoctorController {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    // Complete appointment
+
     @PutMapping("/appointments/{appointmentId}/complete")
     public ResponseEntity<Response> completeAppointment(
             @PathVariable Long appointmentId,
@@ -155,7 +146,6 @@ public class DoctorController {
     }
 
 
-    // Get doctor's schedule
     @GetMapping("/schedule")
     public ResponseEntity<Response> getDoctorSchedule(
             @RequestHeader("Authorization") String token) {

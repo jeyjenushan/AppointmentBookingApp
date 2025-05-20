@@ -144,26 +144,26 @@ public class DashboardServiceImplementation implements DashboardService{
 
     @Override
     public Response getAllAdmins() {
-        Response response = new Response();
+
         try {
             List<AdminEntity> admins = adminRepository.findAll();
 
             if ( admins.isEmpty()) {
-                response.setStatusCode(404);
-                response.setMessage("No admins found in the system");
-                response.setDoctorDtos(Collections.emptyList());
+
+                return Response.success("No admins found in the system").withAdminDto(Collections.emptyList());
+
             } else {
-                response.setAdminDtos(DtoConverter.convertAdminEntityListToAdminDtoList(admins));
-                response.setStatusCode(200);
-                response.setMessage("admins retrieved successfully");
+
+
+                return Response.success("admins retrieved successfully").withAdminDto(DtoConverter.convertAdminEntityListToAdminDtoList(admins));
             }
 
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setMessage("Failed to retrieve admins. Please try again later.");
-            response.setAdminDtos(Collections.emptyList());
+
+            return Response.error("Failed to retrieve admins. Please try again later.",500).withAdminDto(Collections.emptyList());
+
         }
-        return response;
+
     }
 
 }

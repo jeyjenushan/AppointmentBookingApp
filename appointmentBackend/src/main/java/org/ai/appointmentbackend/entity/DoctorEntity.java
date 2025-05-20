@@ -40,13 +40,6 @@ public class DoctorEntity {
 
     private List<AppointmentEntity> appointments = new ArrayList<>();
 
-
-    //3 types of slots i maintain
-    //1:admin can be set the slots for the doctor
-    //2:patient can be booked but doctor cannot be aproval
-    //3:approval slots
-
-    // Available slots (set by admin)
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "available_slots", joinColumns = @JoinColumn(name = "doctor_id"))
     @MapKeyColumn(name = "slot_date")

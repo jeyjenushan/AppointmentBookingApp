@@ -49,7 +49,7 @@ public class DoctorDashBoardServiceImplementation implements DoctoDashBoardServi
             if(doctor==null){
                 return Response.error("again login you are not authorized",500);
             }
-            List<AppointmentEntity>appointments=appointmentRepository.findByDoctorId(doctor.getId());
+            List<AppointmentEntity>appointments=appointmentRepository.findByDoctorIdAndApprovalStatusNot(doctor.getId(),ApprovalStatus.REJECTED);
             List<AppointmentEntity>completedAppointments=appointmentRepository.findByDoctorIdAndAppointmentStatus(doctor.getId(), AppointmentStatus.COMPLETED);
             List<AppointmentEntity>cancelledApppointments=appointmentRepository.findByDoctorIdAndApprovalStatus(doctor.getId(), ApprovalStatus.REJECTED);
             List<AppointmentEntity>pendingAppointments=appointmentRepository.findByDoctorIdAndApprovalStatus(doctor.getId(), ApprovalStatus.PENDING);
