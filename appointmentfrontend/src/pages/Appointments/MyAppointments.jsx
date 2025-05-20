@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import { assets } from "../../assets/assets";
 import axios from "axios";
+import { Oval } from "react-loader-spinner";
 
 const MyAppointments = () => {
   const {
@@ -20,6 +21,7 @@ const MyAppointments = () => {
   const [newTime, setNewTime] = useState("");
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [cancellingAppointmentId, setCancellingAppointmentId] = useState(null);
 
   const slotDateFormat = (dateString) => {
     const date = new Date(dateString);
@@ -33,7 +35,7 @@ const MyAppointments = () => {
   const fetchAvailableSlots = async (doctorId, date) => {
     try {
       setLoadingSlots(true);
-      setNewTime(""); // Reset time when date changes
+      setNewTime("");
       const { data } = await axios.get(
         `${backendUrl}/api/admin/doctors/${doctorId}/availability`,
         {
@@ -62,7 +64,7 @@ const MyAppointments = () => {
         const displayHour = hourNum % 12 === 0 ? 12 : hourNum % 12;
         formattedSlots.push({
           display: `${displayHour}:${minutes} ${period}`,
-          backend: time, // Keep original format for backend
+          backend: time,
         });
       });
 
@@ -140,11 +142,23 @@ const MyAppointments = () => {
     }
   };
 
+  const handleCancelAppointment = async (appointmentId) => {
+    try {
+      setCancellingAppointmentId(appointmentId);
+      await cancelAppointment(appointmentId);
+      await getUserAppointments();
+    } catch (error) {
+      console.error("Cancellation failed:", error);
+    } finally {
+      setCancellingAppointmentId(null);
+    }
+  };
+
   useEffect(() => {
     if (token) {
       getUserAppointments();
     }
-  }, [token, getUserAppointments]);
+  }, []);
 
   return (
     <div className="p-4">
@@ -256,9 +270,27 @@ const MyAppointments = () => {
                       : ""
                   }`}
                 >
-                  {item.approvalStatus}
-                  {item.approvalStatus === "PENDING" &&
-                    " (Waiting for doctor approval)"}
+                  {item.appointmentStatus === "CANCELLED" ? (
+                    <span className="text-red-600 font-medium">
+                      {item.appointmentStatus}
+                    </span>
+                  ) : (
+                    <span
+                      className={`font-medium ${
+                        item.approvalStatus === "PENDING"
+                          ? "text-yellow-600"
+                          : item.approvalStatus === "APPROVED"
+                          ? "text-blue-600"
+                          : item.approvalStatus === "REJECTED"
+                          ? "text-red-600"
+                          : ""
+                      }`}
+                    >
+                      {item.approvalStatus}
+                      {item.approvalStatus === "PENDING" &&
+                        " (Waiting for doctor approval)"}
+                    </span>
+                  )}
                 </p>
                 <p className="mt-1">
                   <span className="text-sm text-[#3C3C3C] font-medium">
@@ -278,16 +310,6 @@ const MyAppointments = () => {
                 )}
               </div>
               <div className="flex flex-col gap-2 justify-end text-sm text-center">
-                {item.approvalStatus === "PENDING" &&
-                  !item.appointmentStatus == "CANCELLED" && (
-                    <button
-                      onClick={() => cancelAppointment(item.id)}
-                      className="text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
-                    >
-                      Cancel Request
-                    </button>
-                  )}
-
                 {item.approvalStatus === "APPROVED" &&
                   item.appointmentStatus === "SCHEDULED" && (
                     <>
@@ -310,19 +332,24 @@ const MyAppointments = () => {
                         Reschedule
                       </button>
                       <button
-                        onClick={() => cancelAppointment(item.id)}
-                        className="text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
+                        onClick={() => handleCancelAppointment(item.id)}
+                        disabled={cancellingAppointmentId === item.id}
+                        className="text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300 flex items-center justify-center"
                       >
-                        Cancel Appointment
+                        {cancellingAppointmentId === item.id ? (
+                          <Oval
+                            height={20}
+                            width={20}
+                            color="white"
+                            visible={true}
+                            ariaLabel="oval-loading"
+                          />
+                        ) : (
+                          "Cancel Appointment"
+                        )}
                       </button>
                     </>
                   )}
-
-                {item.approvalStatus === "REJECTED" && (
-                  <p className="text-red-500 text-sm font-medium">
-                    Appointment rejected by admin
-                  </p>
-                )}
 
                 {item.appointmentStatus === "COMPLETED" && (
                   <button className="sm:min-w-48 py-2 border border-green-500 rounded text-green-500">
