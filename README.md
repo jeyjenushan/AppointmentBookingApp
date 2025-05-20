@@ -1,6 +1,6 @@
 # 🏥 Hospital Appointment Booking System
 
-![System Overview](https://raw.githubusercontent.com/jeyjenushan/AppointmentBookingApp/main/frontend/public/system-architecture.png)
+![System Architecture](https://img.icons8.com/color/96/000000/network.png)  
 _A secure, role-based platform for managing hospital appointments with real-time features and admin control._
 
 ## 🌟 Key Features
@@ -62,26 +62,32 @@ Ensure the following are installed on your machine:
 git clone https://github.com/jeyjenushan/AppointmentBookingApp.git
 cd AppointmentBookingApp
 ```
+
 ## Database setup
+
 - CREATE DATABASE hospital_appointments;
 
 ## Backend setup
+
 - cd appointmentBackend
 
 ## setup the appointment.properties
 
 ## Run the backend server:
+
 - mvn spring-boot:run
 
 ## Frontend Setup
+
 cd ../appointmentFrontend
 
 ## Create a .env file
+
 - REACT_APP_API_BASE_URL=http://localhost:8080/api
 
 ## Install dependencies and run the app:
+
 - npm install
 - npm start
 
 ## admin folder also setup
-
