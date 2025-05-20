@@ -1,106 +1,87 @@
-# Hospital Appointment Booking System
+# 🏥 Hospital Appointment Booking System
 
-![System Overview](https://via.placeholder.com/800x400?text=System+Architecture+Diagram)  
-_A secure, role-based appointment management platform for healthcare providers_
+![System Overview](https://raw.githubusercontent.com/jeyjenushan/AppointmentBookingApp/main/frontend/public/system-architecture.png)
+_A secure, role-based platform for managing hospital appointments with real-time features and admin control._
 
 ## 🌟 Key Features
 
-### 👨‍⚕️ Multi-Role Access
+### 👥 Role-Based Access
 
-- **Admin**: Doctor management, slot configuration
-- **Doctor**: Appointment approval, schedule management
-- **Patient**: Online booking, payment processing
+- **Admin**
+  - Register & manage doctors
+  - Configure doctor availability (7-day slot)
+  - View analytics dashboard
+- **Doctor**
+  - Set weekly schedule
+  - Approve/reject appointments
+  - Manage calendar
+- **Patient**
+  - Browse doctors by specialty
+  - Book, cancel, or reschedule appointments
+  - Secure online payments
+  - Receive confirmations and reminders
 
-### 🔒 Security Features
+### 🔐 Security
 
-- Role-based authorization
-- Secure authentication with temporary passwords
-- Encrypted data transmission
-- Protected API endpoints
+- Role-based authorization using JWT
+- Encrypted communication
+- Temporary password & email activation for onboarding
+- Spring Security with protected API endpoints
 
-### ⚙️ Core Functionalities
+### 📊 Functionalities
 
-- 7-day doctor slot management
-- Real-time appointment tracking
-- Interactive dashboards with analytics
-- Online payment integration
-- Automated notifications
-- Cancellation & rescheduling with refunds
+- Real-time slot management
+- Admin & Doctor dashboards (Recharts)
+- Notifications via email/SMS
+- Stripe Payment gateway integration
+- Refundable appointment cancellations
 
-## 🛠 Technology Stack
+## 🛠️ Tech Stack
 
-### Frontend
-
-- **Framework**: React.js
-- **UI Components**: Material-UI
-- **Data Visualization**: Recharts
-- **Date Handling**: Day.js
-
-### Backend
-
-- **Framework**: Spring Boot
-- **Security**: Spring Security + JWT
-- **Database**: MySQL
-
-### Infrastructure
-
-- **Database**: MySQL 8.0+
-- **Build Tools**: Maven, npm
-
-## 📋 System Workflow
-
-1. **Admin Setup**
-
-   - Registers doctors with temporary credentials
-   - Configures weekly availability slots
-   - Monitors system analytics
-
-2. **Doctor Onboarding**
-
-   - Receives activation email
-   - Sets permanent credentials
-   - Views/manages appointment calendar
-
-3. **Patient Journey**
-   - Searches doctors by specialty
-   - Books available slots
-   - Makes secure payments
-   - Receives confirmation
-   - Manages appointments
+| Layer       | Technology                              |
+| ----------- | --------------------------------------- |
+| Frontend    | React.js, Material-UI, Recharts, Day.js |
+| Backend     | Spring Boot, Spring Security, JWT       |
+| Database    | MySQL 8.0+                              |
+| Build Tools | Maven (Backend), npm (Frontend)         |
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 📦 Prerequisites
+
+Ensure the following are installed on your machine:
 
 - Node.js v16+
 - Java JDK 11+
 - MySQL 8.0+
 - Maven
 
-### Installation Steps
+### 📁 Clone the Repository
 
-1. **Database Setup**
+```bash
+git clone https://github.com/jeyjenushan/AppointmentBookingApp.git
+cd AppointmentBookingApp
+```
+## Database setup
+- CREATE DATABASE hospital_appointments;
 
-   - Create MySQL database
-   - Import schema (provided in `/database`)
+## Backend setup
+- cd appointmentBackend
 
-2. **Backend Configuration**
+## setup the appointment.properties
 
-   - Update `application.properties` with DB credentials
-   - Configure email service settings
-   - Set payment gateway keys
+## Run the backend server:
+- mvn spring-boot:run
 
-3. **Frontend Setup**
+## Frontend Setup
+cd ../appointmentFrontend
 
-   - Configure API base URL in `.env`
-   - Set up payment processor keys
+## Create a .env file
+- REACT_APP_API_BASE_URL=http://localhost:8080/api
 
-4. **Running the System**
+## Install dependencies and run the app:
+- npm install
+- npm start
 
-   ```bash
-   # Start backend
-   mvn spring-boot:run
+## admin folder also setup
 
-   # Start frontend
-   npm start
-   ```
