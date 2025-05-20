@@ -90,4 +90,3 @@ cd ../appointmentFrontend
 - npm install
 - npm start
 
-## admin folder also setup
