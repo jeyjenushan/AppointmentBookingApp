@@ -14,14 +14,12 @@ import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import AllAppointments from "./pages/Admin/AllAppointments";
 import DoctorsList from "./pages/Admin/DoctorsList";
 
-import AddDoctor from "./pages/Admin/AddDoctor";
-
 import DoctorProfile from "./pages/Doctor/DoctorProfile";
 import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
 
-import AdminList from "./pages/Admin/AdminList";
-import AddAdmin from "./pages/Admin/AddAdmin";
+
 import DoctorAvailabilityManager from "./pages/Admin/DoctorAvailabilityManager";
+import AddDoctor from "./pages/Admin/AddDoctor";
 
 const App = () => {
   const { dToken } = useContext(DoctorContext);
@@ -56,10 +54,6 @@ const App = () => {
             element={aToken ? <DoctorsList /> : <Navigate to="/" />}
           />
           <Route
-            path="/admin-list"
-            element={aToken ? <AdminList /> : <Navigate to="/" />}
-          />
-          <Route
             path="/doctor-list/:doctorId/availability"
             element={
               aToken ? <DoctorAvailabilityManager /> : <Navigate to="/" />
@@ -69,10 +63,7 @@ const App = () => {
             path="/add-doctor"
             element={aToken ? <AddDoctor /> : <Navigate to="/" />}
           />
-          <Route
-            path="/add-admin"
-            element={aToken ? <AddAdmin /> : <Navigate to="/" />}
-          />
+
           <Route
             path="/doctor-appointments"
             element={dToken ? <DoctorAppointments /> : <Navigate to="/" />}

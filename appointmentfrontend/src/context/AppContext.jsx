@@ -198,12 +198,15 @@ const AppContextProvider = (props) => {
       });
 
       console.log(data);
+      console.log(token);
+
       if (data.success) {
         setUserData(data.patientDto);
       }
     } catch (error) {
       console.log(error.message);
     }
+    console.log(userData);
   };
 
   /**
@@ -218,8 +221,9 @@ const AppContextProvider = (props) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      if (data.statusCode == 200) {
+      if (data.success) {
         setUserData(data.patientDto);
+        loadUserProfileData();
       } else {
         toast.error(data.message);
       }

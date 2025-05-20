@@ -5,6 +5,4 @@ export   const adminMenuItems = [
     { to: "/all-appointments", icon: assets.appointment_icon, text: "Appointments" },
     { to: "/add-doctor", icon: assets.add_icon, text: "Add Doctor" },
     { to: "/doctor-list", icon: assets.people_icon, text: "Doctors List" },
-    { to: "/admin-list", icon: assets.people_icon, text: "Admins List" },
-    { to: "/add-admin", icon: assets.add_icon, text: "Add Admin" }
   ];

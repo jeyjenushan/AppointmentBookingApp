@@ -114,13 +114,6 @@ const About = () => {
               <div className="text-4xl mb-4">{feature.icon}</div>
               <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
               <p>{feature.description}</p>
-              {activeCard === index && (
-                <div className="mt-4">
-                  <button className="bg-white text-[#5f6fff] px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 transition-colors duration-300">
-                    Learn more
-                  </button>
-                </div>
-              )}
             </div>
           ))}
         </div>

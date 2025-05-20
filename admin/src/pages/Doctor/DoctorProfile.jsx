@@ -133,28 +133,7 @@ const DoctorProfile = () => {
           </div>
         </div>
 
-        {/* ----- Availability ----- */}
-        <div className="flex gap-1 pt-2 items-center">
-          <input
-            type="checkbox"
-            id="availability"
-            onChange={() =>
-              setProfileData((prev) => ({
-                ...prev,
-                availability:
-                  prev.availability === "available"
-                    ? "unavailable"
-                    : "available",
-              }))
-            }
-            checked={profileData.availability === "available"}
-            disabled={!isEdit}
-            className="cursor-pointer"
-          />
-          <label htmlFor="availability" className="cursor-pointer">
-            Available
-          </label>
-        </div>
+
 
         {/* ----- Action Buttons ----- */}
         {isEdit ? (

@@ -6,31 +6,51 @@ const MyProfile = () => {
     userData,
     setUserData,
     loading,
-    setLoading,
     token,
     loadUserProfileData,
     updateUserProfileData,
   } = useContext(AppContext);
   const [isEdit, setIsEdit] = useState(false);
+  const [localLoading, setLocalLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      loadUserProfileData();
-    }
-  }, [token]);
-  const handleSave = () => {
-    // Extract only the necessary data to send to backend
-    const updatedData = {
-      name: userData.user.name,
-      contactNumber: userData.contactNumber,
-      address: userData.address,
-      gender: userData.gender,
-      dob: userData.dob,
+    const loadData = async () => {
+      if (token) {
+        try {
+          setLocalLoading(true);
+          await loadUserProfileData();
+        } catch (error) {
+          console.error("Failed to load profile:", error);
+        } finally {
+          setLocalLoading(false);
+        }
+      }
     };
+    loadData();
+  }, [token]);
 
-    updateUserProfileData(updatedData);
-    setIsEdit(false);
+  const handleSave = async () => {
+    try {
+      const updatedData = {
+        name: userData.user.name,
+        contactNumber: userData.contactNumber,
+        address: userData.address,
+        gender: userData.gender,
+        dob: userData.dob,
+      };
+
+      await updateUserProfileData(updatedData);
+      setIsEdit(false);
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      // Optionally show error to user
+    }
   };
+
+  // Show loading state
+  if (localLoading || !userData) {
+    return <div className="p-4">Loading profile data...</div>;
+  }
 
   return (
     userData && (
@@ -93,7 +113,7 @@ const MyProfile = () => {
                   onChange={(e) =>
                     setUserData((prev) => ({
                       ...prev,
-                      address: { ...prev, address: e.target.value },
+                      address: e.target.value,
                     }))
                   }
                   value={userData.address}

@@ -144,6 +144,7 @@ const DoctorAvailabilityManager = () => {
     try {
       setSaving(true);
       const slotsToSave = convertDaysToApiSlots(slots);
+      console.log(slotsToSave);
       await updateDoctorAvailability(doctorId, slotsToSave);
       message.success("Availability saved successfully");
       await getDoctorAvailability(doctorId);
@@ -212,7 +213,9 @@ const DoctorAvailabilityManager = () => {
                 value={newSlot.startTime}
                 onChange={(time) => setNewSlot({ ...newSlot, startTime: time })}
                 style={{ width: 120 }}
-                disabledHours={() => [0, 1, 2, 3, 4, 5, 6, 7, 22, 23]}
+                disabledHours={() => [
+                  0, 1, 2, 3, 4, 5, 6, 7, 18, 19, 20, 21, 22, 23,
+                ]}
               />
             </div>
 
@@ -224,7 +227,9 @@ const DoctorAvailabilityManager = () => {
                 value={newSlot.endTime}
                 onChange={(time) => setNewSlot({ ...newSlot, endTime: time })}
                 style={{ width: 120 }}
-                disabledHours={() => [0, 1, 2, 3, 4, 5, 6, 7, 22, 23]}
+                disabledHours={() => [
+                  0, 1, 2, 3, 4, 5, 6, 7, 18, 19, 20, 21, 22, 23,
+                ]}
               />
             </div>
 

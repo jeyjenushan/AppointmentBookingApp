@@ -147,7 +147,7 @@ const DoctorDashboard = () => {
             onClick={() => setActiveTab("overview")}
             className={`px-4 py-2 rounded-lg ${
               activeTab === "overview"
-                ? "bg-blue-600 text-white"
+                ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-700"
             }`}
           >
@@ -157,7 +157,7 @@ const DoctorDashboard = () => {
             onClick={() => setActiveTab("appointments")}
             className={`px-4 py-2 rounded-lg ${
               activeTab === "appointments"
-                ? "bg-blue-600 text-white"
+                ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-700"
             }`}
           >
@@ -167,7 +167,7 @@ const DoctorDashboard = () => {
             onClick={() => setActiveTab("slots")}
             className={`px-4 py-2 rounded-lg ${
               activeTab === "slots"
-                ? "bg-blue-600 text-white"
+                ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-700"
             }`}
           >
@@ -360,7 +360,7 @@ const DoctorDashboard = () => {
                           {item.patientName}
                         </p>
                         <p className="text-sm text-gray-500">
-                          {slotDateFormat(item.slotDate)} at {item.slotTime}
+                          {slotDateFormat(item.slotDate)} at {item.time}
                         </p>
                       </div>
                       <div>
@@ -412,7 +412,7 @@ const DoctorDashboard = () => {
                           ? item.cancelled
                             ? "Payment returned"
                             : "Paid"
-                          : "Pending Payment"}
+                          : ""}
                       </span>
                     </div>
                   </div>

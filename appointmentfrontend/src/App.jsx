@@ -17,7 +17,6 @@ import Appointment from "./pages/Appointments/Appointment";
 import Verify from "./pages/payment/Verify";
 import MyProfile from "./pages/UserProfile/MyProfile";
 
-
 const App = () => {
   const location = useLocation();
 
@@ -29,7 +28,7 @@ const App = () => {
   );
 
   return (
-    <div className="mx-4 sm:mx-[10%] min-h-screen flex flex-col">
+    <div className=" min-h-screen flex flex-col">
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -42,8 +41,13 @@ const App = () => {
         pauseOnHover
         theme="light"
       />
-      {!isAuthPage && <Navbar />}
-      <main className="flex-grow">
+      {!isAuthPage && (
+        <div className="mx-4 sm:mx-[10%] ">
+          <Navbar />
+        </div>
+      )}
+
+      <main className="flex-grow mx-4 sm:mx-[10%]">
         <Routes>
           {/* Public Routes */}
           <Route path="/register" element={<Register />} />
@@ -54,7 +58,6 @@ const App = () => {
           <Route path="/doctors" element={<Doctors />} />
           <Route path="/doctors/:specialization" element={<Doctors />} />
           <Route path="/" element={<Home />} />
-       
 
           {/* Protected Routes */}
           <Route element={<ProtectedRoutes />}>

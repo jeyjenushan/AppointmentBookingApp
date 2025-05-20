@@ -97,7 +97,6 @@ const DoctorContextProvider = (props) => {
           },
         }
       );
-   
 
       if (data.success) {
         toast.success(data.message);
@@ -226,7 +225,6 @@ const DoctorContextProvider = (props) => {
 
       if (data.statusCode === 200) {
         toast.success(data.message);
-        setIsEdit(false);
         await getProfileData();
       } else {
         toast.error(data.message);

@@ -21,8 +21,7 @@ import {
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
 const Dashboard = () => {
-  const { aToken, getDashData, rejectAppointment, dashData } =
-    useContext(AdminContext);
+  const { aToken, getDashData, dashData } = useContext(AdminContext);
   const { slotDateFormat } = useContext(AppContext);
 
   useEffect(() => {
@@ -290,7 +289,7 @@ const Dashboard = () => {
                       <div className="flex-shrink-0 h-10 w-10">
                         <img
                           className="h-10 w-10 rounded-full"
-                          src={`data:image/jpeg;base64,${item.image}`}
+                          src={`data:image/jpeg;base64,${item.patientImage}`}
                           alt=""
                         />
                       </div>
