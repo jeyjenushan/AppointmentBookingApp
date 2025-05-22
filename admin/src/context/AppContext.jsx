@@ -50,7 +50,7 @@ const AppContextProvider = (props) => {
     return age;
   };
 
-  //LOGIN Admin or Doctor
+  //LOGIN Admin
   const login = async (formDataToSend, remember) => {
     setLoading(true);
     try {
@@ -79,7 +79,45 @@ const AppContextProvider = (props) => {
           setAdminId(data.userDto.adminId);
           localStorage.setItem("aToken", data.token);
           navigate("/admin-dashboard");
-        } else if (role === "DOCTOR") {
+        } else {
+          toast.error("Unauthorized role.");
+        }
+      } else {
+        throw new Error(data.message || "Login failed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Login failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  //Login doctor
+  const doctorLogin = async (formDataToSend, remember) => {
+    setLoading(true);
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/login",
+        formDataToSend
+      );
+      const role = data.role;
+
+      if (role === "PATIENT") {
+        toast.error("Patient login is not allowed on this portal.");
+        return;
+      }
+
+      if (data.statusCode === 200) {
+        if (remember) {
+          localStorage.setItem("rememberedEmail", formDataToSend.email);
+          localStorage.setItem("rememberedPassword", formDataToSend.password);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+          localStorage.removeItem("rememberedPassword");
+        }
+
+        if (role === "DOCTOR") {
           setDToken(data.token);
           setDoctorId(data.userDto.doctorId);
           localStorage.setItem("dToken", data.token);
@@ -184,6 +222,7 @@ const AppContextProvider = (props) => {
     sendOtp,
     verifyOtp,
     resetPassword,
+    doctorLogin,
   };
 
   return (

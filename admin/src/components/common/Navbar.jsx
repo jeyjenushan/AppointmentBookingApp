@@ -13,7 +13,11 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const logout = () => {
-    navigate("/");
+    if (aToken) {
+      navigate("/adminLogin");
+    } else if (dToken) {
+      navigate("/doctorLogin");
+    }
     dToken && setDToken("");
     dToken && localStorage.removeItem("dToken");
     aToken && setAToken("");

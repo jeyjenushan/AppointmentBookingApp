@@ -17,9 +17,10 @@ import DoctorsList from "./pages/Admin/DoctorsList";
 import DoctorProfile from "./pages/Doctor/DoctorProfile";
 import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
 
-
 import DoctorAvailabilityManager from "./pages/Admin/DoctorAvailabilityManager";
 import AddDoctor from "./pages/Admin/AddDoctor";
+import AdminLogin from "./pages/Login/AdminLogin";
+import Welcome from "./pages/Welcome";
 
 const App = () => {
   const { dToken } = useContext(DoctorContext);
@@ -32,7 +33,6 @@ const App = () => {
       <div className="flex items-start">
         <Sidebar />
         <Routes>
-          <Route path="/" element={<></>} />
           <Route
             path="/admin-dashboard"
             element={
@@ -47,30 +47,40 @@ const App = () => {
           />
           <Route
             path="/all-appointments"
-            element={aToken ? <AllAppointments /> : <Navigate to="/" />}
+            element={
+              aToken ? <AllAppointments /> : <Navigate to="/adminLogin" />
+            }
           />
           <Route
             path="/doctor-list"
-            element={aToken ? <DoctorsList /> : <Navigate to="/" />}
+            element={aToken ? <DoctorsList /> : <Navigate to="/doctorLogin" />}
           />
           <Route
             path="/doctor-list/:doctorId/availability"
             element={
-              aToken ? <DoctorAvailabilityManager /> : <Navigate to="/" />
+              aToken ? (
+                <DoctorAvailabilityManager />
+              ) : (
+                <Navigate to="/adminLogin" />
+              )
             }
           />
           <Route
             path="/add-doctor"
-            element={aToken ? <AddDoctor /> : <Navigate to="/" />}
+            element={aToken ? <AddDoctor /> : <Navigate to="/adminLogin" />}
           />
 
           <Route
             path="/doctor-appointments"
-            element={dToken ? <DoctorAppointments /> : <Navigate to="/" />}
+            element={
+              dToken ? <DoctorAppointments /> : <Navigate to="/doctorLogin" />
+            }
           />
           <Route
             path="/doctor-profile"
-            element={dToken ? <DoctorProfile /> : <Navigate to="/" />}
+            element={
+              dToken ? <DoctorProfile /> : <Navigate to="/doctorLogin" />
+            }
           />
           <Route
             path="*"
@@ -87,7 +97,9 @@ const App = () => {
     <>
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Welcome />} />
+        <Route path="/doctorLogin" element={<Login />} />
+        <Route path="/adminLogin" element={<AdminLogin />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
       </Routes>
     </>

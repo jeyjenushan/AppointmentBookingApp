@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 const BookingSlots = ({
@@ -8,19 +10,30 @@ const BookingSlots = ({
   setSelectedTime,
   handleBookAppointment,
   loading,
+  bookingSuccess,
 }) => {
   const now = dayjs();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (bookingSuccess) {
+      const timer = setTimeout(() => {
+        navigate("/my-appointments");
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [bookingSuccess, navigate]);
+
+  const getFutureTimes = (slotTimes, date) =>
+    slotTimes.filter((time) =>
+      dayjs(`${date} ${time}`, "YYYY-MM-DD HH:mm").isAfter(dayjs())
+    );
 
   const filteredSlots = slots.filter((slot) => {
-    // For today's date, filter times that are after now
     if (slot.date === now.format("YYYY-MM-DD")) {
-      const availableTimes = slot.times.filter((time) => {
-        const slotTime = dayjs(`${slot.date} ${time}`, "YYYY-MM-DD HH:mm");
-        return slotTime.isAfter(now);
-      });
+      const availableTimes = getFutureTimes(slot.times, slot.date);
       return availableTimes.length > 0;
     }
-    // For other days, just check if there are any times
     return slot.times.length > 0;
   });
 
@@ -53,24 +66,16 @@ const BookingSlots = ({
         )}
       </div>
 
-      {/* Time Selection */}
       {selectedDate && (
         <div className="flex items-center gap-3 w-full overflow-x-scroll mt-4">
           {(() => {
             const selectedSlot = slots.find((s) => s.date === selectedDate);
             if (!selectedSlot) return null;
 
-            const filteredTimes = selectedSlot.times.filter((time) => {
-              const slotTime = dayjs(
-                `${selectedDate} ${time}`,
-                "YYYY-MM-DD HH:mm"
-              );
-
-              if (selectedDate === now.format("YYYY-MM-DD")) {
-                return slotTime.isAfter(now);
-              }
-              return true;
-            });
+            const filteredTimes =
+              selectedDate === now.format("YYYY-MM-DD")
+                ? getFutureTimes(selectedSlot.times, selectedDate)
+                : selectedSlot.times;
 
             return filteredTimes.map((time) => (
               <p
@@ -92,13 +97,39 @@ const BookingSlots = ({
       <button
         onClick={handleBookAppointment}
         disabled={!selectedDate || !selectedTime || loading}
-        className={`bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 ${
+        className={`bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 transition-opacity duration-300 ${
           !selectedDate || !selectedTime || loading
             ? "opacity-50 cursor-not-allowed"
-            : ""
+            : "hover:bg-primary-dark"
         }`}
       >
-        {loading ? "Booking..." : "Book an appointment"}
+        {loading ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg
+              className="animate-spin h-4 w-4 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v8z"
+              ></path>
+            </svg>
+            Booking...
+          </span>
+        ) : (
+          "Book an appointment"
+        )}
       </button>
     </div>
   );

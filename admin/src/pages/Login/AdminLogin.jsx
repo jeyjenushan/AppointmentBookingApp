@@ -1,18 +1,18 @@
-import LoginForm from "../../components/Login/LoginForm";
+import React, { useState } from "react";
+import AdminLoginForm from "../../components/Login/AdminLoginForm";
 
-const Login = () => {
+const AdminLogin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="flex flex-col gap-4 m-auto items-start p-8 w-full max-w-md border rounded-xl text-gray-600 text-sm shadow-lg bg-white">
         <h2 className="text-2xl font-semibold m-auto text-gray-800">
-          <span className="text-primary">Doctor</span> Login
+          <span className="text-primary">Admin</span> Login
         </h2>
 
-        <LoginForm />
-
+        <AdminLoginForm />
       </div>
     </div>
   );
 };
 
-export default Login;
+export default AdminLogin;

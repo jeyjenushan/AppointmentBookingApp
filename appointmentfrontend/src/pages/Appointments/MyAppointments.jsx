@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
-import { assets } from "../../assets/assets";
-import axios from "axios";
 import { Oval } from "react-loader-spinner";
+import axios from "axios";
 
 const MyAppointments = () => {
   const {
@@ -14,7 +13,8 @@ const MyAppointments = () => {
     token,
     backendUrl,
   } = useContext(AppContext);
-  const [payment, setPayment] = useState("");
+
+  const [loading, setLoading] = useState(true);
   const [rescheduleData, setRescheduleData] = useState(null);
   const [showRescheduleForm, setShowRescheduleForm] = useState(false);
   const [newDate, setNewDate] = useState("");
@@ -22,75 +22,90 @@ const MyAppointments = () => {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [cancellingAppointmentId, setCancellingAppointmentId] = useState(null);
+  const [payingAppointmentId, setPayingAppointmentId] = useState(null);
+  const [reschedulingAppointmentId, setReschedulingAppointmentId] =
+    useState(null);
+  const [error, setError] = useState(null);
 
   const slotDateFormat = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+    } catch (e) {
+      console.error("Error formatting date:", e);
+      return dateString; // fallback to raw string if formatting fails
+    }
   };
 
   const fetchAvailableSlots = async (doctorId, date) => {
     try {
       setLoadingSlots(true);
       setNewTime("");
+      setError(null);
+
       const { data } = await axios.get(
         `${backendUrl}/api/admin/doctors/${doctorId}/availability`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          timeout: 10000, // 10 seconds timeout
         }
       );
 
-      // Ensure we have the expected data structure
-      if (!data.doctorDto || !data.doctorDto.availableSlots) {
+      if (!data?.doctorDto?.availableSlots) {
         throw new Error("Invalid data structure received");
       }
 
       const slotsData = data.doctorDto.availableSlots;
       const formattedSlots = [];
-
-      // Find slots for the selected date
       const slotsForDate = slotsData[date] || [];
 
-      // Convert each time slot to display format
       slotsForDate.forEach((time) => {
-        const [hours, minutes] = time.split(":");
-        const hourNum = parseInt(hours, 10);
-        const period = hourNum >= 12 ? "PM" : "AM";
-        const displayHour = hourNum % 12 === 0 ? 12 : hourNum % 12;
-        formattedSlots.push({
-          display: `${displayHour}:${minutes} ${period}`,
-          backend: time,
-        });
+        try {
+          const [hours, minutes] = time.split(":");
+          const hourNum = parseInt(hours, 10);
+          const period = hourNum >= 12 ? "PM" : "AM";
+          const displayHour = hourNum % 12 === 0 ? 12 : hourNum % 12;
+          formattedSlots.push({
+            display: `${displayHour}:${minutes} ${period}`,
+            backend: time,
+          });
+        } catch (e) {
+          console.error("Error formatting time slot:", time, e);
+        }
       });
 
-      // Sort slots chronologically
-      formattedSlots.sort((a, b) => {
-        const timeA = a.backend;
-        const timeB = b.backend;
-        return timeA.localeCompare(timeB);
-      });
-
+      formattedSlots.sort((a, b) => a.backend.localeCompare(b.backend));
       setAvailableSlots(formattedSlots);
     } catch (error) {
       console.error("Error fetching available slots:", error);
+      setError("Failed to load available time slots. Please try again.");
       setAvailableSlots([]);
     } finally {
       setLoadingSlots(false);
     }
   };
 
-  const handleReschedule = (appointment) => {
-    setRescheduleData(appointment);
-    const initialDate = appointment.slotDate.split("T")[0];
-    setNewDate(initialDate);
-    setNewTime("");
-    fetchAvailableSlots(appointment.doctorId, initialDate);
-    setShowRescheduleForm(true);
+  const handleReschedule = async (appointment) => {
+    try {
+      setReschedulingAppointmentId(appointment.id);
+      setRescheduleData(appointment);
+      const initialDate = appointment.slotDate.split("T")[0];
+      setNewDate(initialDate);
+      setNewTime("");
+      await fetchAvailableSlots(appointment.doctorId, initialDate);
+      setShowRescheduleForm(true);
+    } catch (error) {
+      console.error("Error preparing reschedule:", error);
+      setError("Failed to prepare reschedule. Please try again.");
+    } finally {
+      setReschedulingAppointmentId(null);
+    }
   };
 
   const handleDateChange = async (e) => {
@@ -103,12 +118,11 @@ const MyAppointments = () => {
 
   const submitReschedule = async () => {
     if (!rescheduleData || !newDate || !newTime) {
-      alert("Please select both date and time");
+      setError("Please select both date and time");
       return;
     }
 
     try {
-      // Find the backend time format from the available slots
       const selectedSlot = availableSlots.find(
         (slot) => slot.display === newTime
       );
@@ -125,20 +139,23 @@ const MyAppointments = () => {
       setShowRescheduleForm(false);
       setNewDate("");
       setNewTime("");
-      await getUserAppointments(); // Refresh the appointments list
+      await getUserAppointments();
     } catch (error) {
       console.error("Reschedule failed:", error);
-      alert("Reschedule failed. Please try again.");
+      setError("Reschedule failed. Please try again.");
     }
   };
 
   const handlePayment = async (appointmentId) => {
     try {
+      setPayingAppointmentId(appointmentId);
       await appointmentStripe(appointmentId);
-      setPayment(appointmentId);
-      getUserAppointments();
+      await getUserAppointments();
     } catch (error) {
       console.error("Payment failed:", error);
+      setError("Payment failed. Please try again.");
+    } finally {
+      setPayingAppointmentId(null);
     }
   };
 
@@ -149,22 +166,48 @@ const MyAppointments = () => {
       await getUserAppointments();
     } catch (error) {
       console.error("Cancellation failed:", error);
+      setError("Cancellation failed. Please try again.");
     } finally {
       setCancellingAppointmentId(null);
     }
   };
 
+  const loadAppointments = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      await getUserAppointments();
+    } catch (error) {
+      console.error("Failed to load appointments:", error);
+      setError("Failed to load appointments. Please refresh the page.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (token) {
-      getUserAppointments();
+      loadAppointments();
     }
-  }, []);
+  }, [token]);
 
   return (
     <div className="p-4">
       <p className="pb-3 mt-12 text-lg font-medium text-gray-600 border-b">
         My appointments
       </p>
+
+      {error && (
+        <div className="p-4 mb-4 text-red-600 bg-red-100 rounded">
+          {error}
+          <button
+            onClick={() => setError(null)}
+            className="float-right font-bold"
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       {showRescheduleForm && rescheduleData && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -188,7 +231,9 @@ const MyAppointments = () => {
                 New Time
               </label>
               {loadingSlots ? (
-                <p>Loading available time slots...</p>
+                <div className="flex items-center justify-center p-4">
+                  <Oval height={24} width={24} color="#4fa94d" />
+                </div>
               ) : availableSlots.length > 0 ? (
                 <select
                   className="w-full p-2 border rounded"
@@ -204,12 +249,17 @@ const MyAppointments = () => {
                   ))}
                 </select>
               ) : (
-                <p>No available slots for this date</p>
+                <p className="text-gray-500">
+                  No available slots for this date
+                </p>
               )}
             </div>
             <div className="flex justify-end gap-2">
               <button
-                onClick={() => setShowRescheduleForm(false)}
+                onClick={() => {
+                  setShowRescheduleForm(false);
+                  setError(null);
+                }}
                 className="px-4 py-2 text-sm text-gray-600 border rounded hover:bg-gray-100"
               >
                 Cancel
@@ -217,37 +267,58 @@ const MyAppointments = () => {
               <button
                 onClick={submitReschedule}
                 disabled={!newDate || !newTime}
-                className={`px-4 py-2 text-sm text-white rounded ${
+                className={`px-4 py-2 text-sm text-white rounded flex items-center justify-center min-w-32 ${
                   !newDate || !newTime
                     ? "bg-gray-400"
                     : "bg-primary hover:bg-primary-dark"
                 }`}
               >
-                Confirm Reschedule
+                {reschedulingAppointmentId === rescheduleData.id ? (
+                  <Oval height={20} width={20} color="white" />
+                ) : (
+                  "Confirm Reschedule"
+                )}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Rest of your component remains the same */}
       <div className="mt-4">
-        {appointments.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center py-12">
+            <Oval height={40} width={40} color="#4fa94d" />
+          </div>
+        ) : appointments.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-gray-500">You have no appointments yet.</p>
+            <button
+              onClick={loadAppointments}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Refresh
+            </button>
           </div>
         ) : (
           appointments.map((item, index) => (
             <div
-              key={index}
+              key={`${item.id}-${index}`}
               className="grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-4 border-b"
             >
-              <div>
-                <img
-                  className="w-36 h-36 object-cover bg-[#EAEFFF]"
-                  src={`data:image/png;base64,${item.image}`}
-                  alt="Doctor"
-                />
+              <div className="w-36 h-36 bg-[#EAEFFF] flex items-center justify-center">
+                {item.image ? (
+                  <img
+                    className="w-full h-full object-cover"
+                    src={`data:image/png;base64,${item.image}`}
+                    alt="Doctor"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = "placeholder-doctor.png"; // fallback image
+                    }}
+                  />
+                ) : (
+                  <div className="text-gray-400">No Image</div>
+                )}
               </div>
               <div className="flex-1 text-sm text-[#5E5E5E]">
                 <p className="text-[#262626] text-base font-semibold">
@@ -316,9 +387,18 @@ const MyAppointments = () => {
                       {!item.payment ? (
                         <button
                           onClick={() => handlePayment(item.id)}
-                          className="text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-[#5f6fff] hover:text-white"
+                          disabled={payingAppointmentId === item.id}
+                          className={`text-[#696969] sm:min-w-48 py-2 border rounded flex items-center justify-center ${
+                            payingAppointmentId === item.id
+                              ? "bg-gray-200"
+                              : "hover:bg-[#5f6fff] hover:text-white"
+                          }`}
                         >
-                          Pay Online
+                          {payingAppointmentId === item.id ? (
+                            <Oval height={20} width={20} color="#696969" />
+                          ) : (
+                            "Pay Online"
+                          )}
                         </button>
                       ) : (
                         <button className="sm:min-w-48 py-2 border rounded text-[#696969] bg-[#EAEFFF]">
@@ -327,23 +407,30 @@ const MyAppointments = () => {
                       )}
                       <button
                         onClick={() => handleReschedule(item)}
-                        className="text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-gray-200"
+                        disabled={reschedulingAppointmentId === item.id}
+                        className={`text-[#696969] sm:min-w-48 py-2 border rounded flex items-center justify-center ${
+                          reschedulingAppointmentId === item.id
+                            ? "bg-gray-200"
+                            : "hover:bg-gray-200"
+                        }`}
                       >
-                        Reschedule
+                        {reschedulingAppointmentId === item.id ? (
+                          <Oval height={20} width={20} color="#696969" />
+                        ) : (
+                          "Reschedule"
+                        )}
                       </button>
                       <button
                         onClick={() => handleCancelAppointment(item.id)}
                         disabled={cancellingAppointmentId === item.id}
-                        className="text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300 flex items-center justify-center"
+                        className={`text-[#696969] sm:min-w-48 py-2 border rounded flex items-center justify-center ${
+                          cancellingAppointmentId === item.id
+                            ? "bg-gray-200"
+                            : "hover:bg-red-600 hover:text-white"
+                        }`}
                       >
                         {cancellingAppointmentId === item.id ? (
-                          <Oval
-                            height={20}
-                            width={20}
-                            color="white"
-                            visible={true}
-                            ariaLabel="oval-loading"
-                          />
+                          <Oval height={20} width={20} color="#696969" />
                         ) : (
                           "Cancel Appointment"
                         )}

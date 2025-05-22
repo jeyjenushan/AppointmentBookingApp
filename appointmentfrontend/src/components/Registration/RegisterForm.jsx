@@ -125,18 +125,6 @@ const RegisterForm = () => {
               required
             />
           </div>
-
-          <div className="flex flex-col">
-            <label className="text-gray-700 mb-1">Medical History</label>
-            <textarea
-              name="medicalHistory"
-              onChange={handleChange}
-              value={formData.medicalHistory}
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows="3"
-              required
-            />
-          </div>
         </div>
       </div>
 

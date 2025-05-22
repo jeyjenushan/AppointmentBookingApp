@@ -228,7 +228,7 @@ const DoctorAvailabilityManager = () => {
                 onChange={(time) => setNewSlot({ ...newSlot, endTime: time })}
                 style={{ width: 120 }}
                 disabledHours={() => [
-                  0, 1, 2, 3, 4, 5, 6, 7, 18, 19, 20, 21, 22, 23,
+                  0, 1, 2, 3, 4, 5, 6, 7, 8, 18, 19, 20, 21, 22, 23,
                 ]}
               />
             </div>
