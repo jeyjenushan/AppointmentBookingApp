@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppointment } from "../../hooks/Appointment/useAppointment";
 import { AppContext } from "../../context/AppContext";
@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 const Appointment = () => {
   const navigate = useNavigate();
   const { token, bookAppointment, currencySymbol } = useContext(AppContext);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [bookingLoading, setBookingLoading] = useState(false);
   const {
     docInfo,
     slots,
@@ -26,15 +28,24 @@ const Appointment = () => {
       toast.warning("Please login to book an appointment");
       return navigate("/login");
     }
-
     try {
+      setBookingLoading(true); // Set booking-specific loading
       const bookingData = prepareBookingData();
       await bookAppointment(bookingData);
       toast.success("Appointment booked successfully!");
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || "Failed to book appointment");
+    } finally {
+      setBookingLoading(false); // Reset loading state
     }
   };
+
+  if (loading) {
+    return (
+      <div className="text-center py-8">Loading doctor information...</div>
+    );
+  }
+
   if (!docInfo) {
     return (
       <div className="text-center py-8">Loading doctor information...</div>
@@ -54,7 +65,7 @@ const Appointment = () => {
         setSelectedDate={setSelectedDate}
         setSelectedTime={setSelectedTime}
         handleBookAppointment={handleBookAppointment}
-        loading={loading}
+        loading={bookingLoading}
       />
 
       {/* Listing Related Doctors */}

@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 const BookingSlots = ({
@@ -10,53 +8,41 @@ const BookingSlots = ({
   setSelectedTime,
   handleBookAppointment,
   loading,
-  bookingSuccess,
 }) => {
   const now = dayjs();
-  const navigate = useNavigate();
-  const [isClicked, setIsClicked] = useState(false);
-
-  useEffect(() => {
-    if (bookingSuccess) {
-      setIsClicked(false); // Reset click state when booking is successful
-      const timer = setTimeout(() => {
-        navigate("/my-appointments");
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [bookingSuccess, navigate]);
-
-  const getFutureTimes = (slotTimes, date) =>
-    slotTimes.filter((time) =>
-      dayjs(`${date} ${time}`, "YYYY-MM-DD HH:mm").isAfter(dayjs())
-    );
 
   const filteredSlots = slots.filter((slot) => {
+    // For today's date, filter times that are after now
     if (slot.date === now.format("YYYY-MM-DD")) {
-      const availableTimes = getFutureTimes(slot.times, slot.date);
+      const availableTimes = slot.times.filter((time) => {
+        const slotTime = dayjs(`${slot.date} ${time}`, "YYYY-MM-DD HH:mm");
+        return slotTime.isAfter(now);
+      });
       return availableTimes.length > 0;
     }
+    // For other days, just check if there are any times
     return slot.times.length > 0;
   });
 
   return (
     <div className="sm:ml-72 sm:pl-4 mt-4 font-medium text-gray-700">
       <p>Booking slots</p>
-
       <div className="flex gap-3 items-center w-full overflow-x-scroll mt-4">
         {filteredSlots.length > 0 ? (
           filteredSlots.map((slot) => (
             <div
               onClick={() => {
-                setSelectedDate(slot.date);
-                setSelectedTime(null);
+                if (!loading) {
+                  setSelectedDate(slot.date);
+                  setSelectedTime(null);
+                }
               }}
               key={slot.date}
-              className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${
+              className={`text-center py-6 min-w-16 rounded-full cursor-pointer transition-colors ${
                 selectedDate === slot.date
                   ? "bg-primary text-white"
-                  : "border border-gray-200"
-              }`}
+                  : "border border-gray-200 hover:border-primary"
+              } ${loading ? "opacity-50 pointer-events-none" : ""}`}
             >
               <p>{slot.dayName}</p>
               <p>{slot.dayNumber}</p>
@@ -69,16 +55,24 @@ const BookingSlots = ({
         )}
       </div>
 
+      {/* Time Selection */}
       {selectedDate && (
         <div className="flex items-center gap-3 w-full overflow-x-scroll mt-4">
           {(() => {
             const selectedSlot = slots.find((s) => s.date === selectedDate);
             if (!selectedSlot) return null;
 
-            const filteredTimes =
-              selectedDate === now.format("YYYY-MM-DD")
-                ? getFutureTimes(selectedSlot.times, selectedDate)
-                : selectedSlot.times;
+            const filteredTimes = selectedSlot.times.filter((time) => {
+              const slotTime = dayjs(
+                `${selectedDate} ${time}`,
+                "YYYY-MM-DD HH:mm"
+              );
+
+              if (selectedDate === now.format("YYYY-MM-DD")) {
+                return slotTime.isAfter(now);
+              }
+              return true;
+            });
 
             return filteredTimes.map((time) => (
               <p
@@ -98,23 +92,18 @@ const BookingSlots = ({
       )}
 
       <button
-        onClick={() => {
-          setIsClicked(true);
-          handleBookAppointment();
-        }}
+        onClick={handleBookAppointment}
         disabled={!selectedDate || !selectedTime || loading}
-        className={`bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 transition-opacity duration-300 ${
+        className={`bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 transition-opacity ${
           !selectedDate || !selectedTime || loading
             ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-primary-dark"
+            : "hover:opacity-90"
         }`}
       >
-        {isClicked && loading ? (
+        {loading ? (
           <span className="flex items-center justify-center gap-2">
             <svg
               className="animate-spin h-4 w-4 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
               viewBox="0 0 24 24"
             >
               <circle
@@ -128,7 +117,7 @@ const BookingSlots = ({
               <path
                 className="opacity-75"
                 fill="currentColor"
-                d="M4 12a8 8 0 018-8v8z"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               ></path>
             </svg>
             Booking...
