@@ -4,6 +4,7 @@ import RememberMe from "./RememberMe";
 import { Oval } from "react-loader-spinner";
 import { useLogin } from "../../hooks/login/useLogin";
 import { AppContext } from "../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const {
@@ -14,7 +15,7 @@ const LoginForm = () => {
     onSubmitDoctorHandler,
   } = useLogin();
   const { loading } = useContext(AppContext);
-  const { navigate } = navigate();
+  const navigate = useNavigate();
 
   return (
     <div>
