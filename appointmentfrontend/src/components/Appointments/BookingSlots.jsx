@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
@@ -14,9 +14,11 @@ const BookingSlots = ({
 }) => {
   const now = dayjs();
   const navigate = useNavigate();
+  const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
     if (bookingSuccess) {
+      setIsClicked(false); // Reset click state when booking is successful
       const timer = setTimeout(() => {
         navigate("/my-appointments");
       }, 1500);
@@ -40,6 +42,7 @@ const BookingSlots = ({
   return (
     <div className="sm:ml-72 sm:pl-4 mt-4 font-medium text-gray-700">
       <p>Booking slots</p>
+
       <div className="flex gap-3 items-center w-full overflow-x-scroll mt-4">
         {filteredSlots.length > 0 ? (
           filteredSlots.map((slot) => (
@@ -95,7 +98,10 @@ const BookingSlots = ({
       )}
 
       <button
-        onClick={handleBookAppointment}
+        onClick={() => {
+          setIsClicked(true);
+          handleBookAppointment();
+        }}
         disabled={!selectedDate || !selectedTime || loading}
         className={`bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 transition-opacity duration-300 ${
           !selectedDate || !selectedTime || loading
@@ -103,7 +109,7 @@ const BookingSlots = ({
             : "hover:bg-primary-dark"
         }`}
       >
-        {loading ? (
+        {isClicked && loading ? (
           <span className="flex items-center justify-center gap-2">
             <svg
               className="animate-spin h-4 w-4 text-white"
