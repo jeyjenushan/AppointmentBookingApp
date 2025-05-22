@@ -54,7 +54,7 @@ const AdminLoginForm = () => {
 
       <button
         type="submit"
-        className="bg-blue-600 text-white w-full py-2 rounded-md text-base hover:bg-blue-700 transition-colors flex justify-center items-center"
+        className="bg-primary text-white w-full py-2 rounded-md text-base hover:bg-primary transition-colors flex justify-center items-center"
         disabled={loading}
       >
         {loading ? (

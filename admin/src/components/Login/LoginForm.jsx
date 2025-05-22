@@ -15,7 +15,6 @@ const LoginForm = () => {
     onSubmitDoctorHandler,
   } = useLogin();
   const { loading } = useContext(AppContext);
-  const navigate = useNavigate();
 
   return (
     <div>
@@ -55,14 +54,14 @@ const LoginForm = () => {
         <div className="flex justify-between items-center w-full">
           <RememberMe remember={remember} setRemember={setRemember} />
 
-          <a href="/forgotPassword" className="text-blue-600 hover:underline">
+          <a href="/forgotPassword" className="text-primary hover:underline">
             Forgot password?
           </a>
         </div>
 
         <button
           type="submit"
-          className="bg-blue-600 text-white w-full py-2 rounded-md text-base hover:bg-blue-700 transition-colors flex justify-center items-center"
+          className="bg-[#5F6FFF] text-white w-full py-2 rounded-md text-base hover:bg-primary transition-colors flex justify-center items-center"
           disabled={loading}
         >
           {loading ? (
