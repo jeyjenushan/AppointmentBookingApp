@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +50,7 @@ public class DoctorDashBoardServiceImplementation implements DoctoDashBoardServi
             if(doctor==null){
                 return Response.error("again login you are not authorized",500);
             }
-            List<AppointmentEntity>appointments=appointmentRepository.findByDoctorIdAndApprovalStatusNot(doctor.getId(),ApprovalStatus.REJECTED);
+            List<AppointmentEntity>appointments=appointmentRepository.findByDoctorIdAndApprovalStatusNotIn(doctor.getId(), Arrays.asList(ApprovalStatus.APPROVED, ApprovalStatus.PENDING));
             List<AppointmentEntity>completedAppointments=appointmentRepository.findByDoctorIdAndAppointmentStatus(doctor.getId(), AppointmentStatus.COMPLETED);
             List<AppointmentEntity>cancelledApppointments=appointmentRepository.findByDoctorIdAndApprovalStatus(doctor.getId(), ApprovalStatus.REJECTED);
             List<AppointmentEntity>pendingAppointments=appointmentRepository.findByDoctorIdAndApprovalStatus(doctor.getId(), ApprovalStatus.PENDING);

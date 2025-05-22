@@ -111,7 +111,7 @@ public class EmailServiceImplementation implements EmailService{
                 "            <p>Your appointment with <strong>Dr. " + doctorName + "</strong> has been confirmed.</p>" +
                 "            <p><strong>Date:</strong> " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")) + "</p>" +
                 "            <p><strong>Time:</strong> " + time.format(DateTimeFormatter.ofPattern("h:mm a")) + "</p>" +
-                "            <p><strong>Consultation Fee:</strong> ₹" + fees + "</p>" +
+                "            <p><strong>Consultation Fee:</strong> Rs." + fees + "</p>" +
                 "            <p>Please complete the payment to secure your appointment:</p>" +
                 "            <p>If you have any questions, please contact our support team.</p>" +
                 "        </div>" +
@@ -170,7 +170,7 @@ public class EmailServiceImplementation implements EmailService{
                 "            <p>Your appointment with <strong>Dr. " + doctorName + "</strong> has been confirmed.</p>" +
                 "            <p><strong>Date:</strong> " + date.format(DateTimeFormatter.ofPattern("MMMM d, yyyy")) + "</p>" +
                 "            <p><strong>Time:</strong> " + time.format(DateTimeFormatter.ofPattern("h:mm a")) + "</p>" +
-                "            <p><strong>Consultation Fee:</strong> ₹" + fees + "</p>" +
+                "            <p><strong>Consultation Fee:</strong> P" + fees + "</p>" +
                 "            <p>Your appointment process successfully completed :</p>" +
                 "            <p>The doctor has received your amount </p>" +
                 "            <p>If you have any questions, please contact our support team.</p>" +
@@ -256,7 +256,7 @@ public class EmailServiceImplementation implements EmailService{
                 "                <p><strong>Appointment ID:</strong> " + appointmentId + "</p>" +
                 "                <p><strong>Date:</strong> " + date.format(dateFormatter) + "</p>" +
                 "                <p><strong>Time:</strong> " + time.format(timeFormatter) + "</p>" +
-                "                <p><strong>Amount Paid:</strong> ₹" + String.format("%.2f", amount) + "</p>" +
+                "                <p><strong>Amount Paid:</strong> Rs." + String.format("%.2f", amount) + "</p>" +
                 "                <p><strong>Transaction ID:</strong> " + transactionId + "</p>" +
                 "            </div>" +
                 "        </div>" +
@@ -322,7 +322,7 @@ public class EmailServiceImplementation implements EmailService{
                 "                <p><strong>Appointment ID:</strong> " + appointmentId + "</p>" +
                 "                <p><strong>Date:</strong> " + date.format(dateFormatter) + "</p>" +
                 "                <p><strong>Time:</strong> " + time.format(timeFormatter) + "</p>" +
-                "                <p><strong>Payment Received:</strong> ₹" + String.format("%.2f", amount) + "</p>" +
+                "                <p><strong>Payment Received:</strong> Rs." + String.format("%.2f", amount) + "</p>" +
                 "                <p><strong>Transaction ID:</strong> " + transactionId + "</p>" +
                 "            </div>" +
                 "            <p>Please prepare for the upcoming appointment.</p>" +
@@ -425,7 +425,7 @@ public class EmailServiceImplementation implements EmailService{
         if (refund) {
             refundSection = "<div style=\"background-color: #e8f5e9; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #4caf50;\">" +
                     "<h3 style=\"margin-top: 0; color: #2e7d32;\">Refund Information</h3>" +
-                    "<p>A refund of <strong>₹" + String.format("%.2f", amount) + "</strong> will be processed to your original payment method within 5-7 business days.</p>" +
+                    "<p>A refund of <strong>Rs." + String.format("%.2f", amount) + "</strong> will be processed to your original payment method within 5-7 business days.</p>" +
                     "<p>You'll receive a confirmation email once the refund is processed.</p>" +
                     "</div>";
         } else if (!byDoctor) {
@@ -487,7 +487,7 @@ public class EmailServiceImplementation implements EmailService{
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
 
         String refundNote = refund ?
-                "<p>A refund of ₹" + String.format("%.2f", amount) + " has been initiated for the patient.</p>" :
+                "<p>A refund of Rs." + String.format("%.2f", amount) + " has been initiated for the patient.</p>" :
                 "<p>No refund was required for this cancellation.</p>";
 
         return "<!DOCTYPE html>" +
@@ -516,7 +516,7 @@ public class EmailServiceImplementation implements EmailService{
                 "                <p><strong>Patient:</strong> " + patientName + "</p>" +
                 "                <p><strong>Date:</strong> " + date.format(dateFormatter) + "</p>" +
                 "                <p><strong>Time:</strong> " + time.format(timeFormatter) + "</p>" +
-                "                <p><strong>Amount:</strong> ₹" + String.format("%.2f", amount) + "</p>" +
+                "                <p><strong>Amount:</strong> Rs." + String.format("%.2f", amount) + "</p>" +
                 "            </div>" +
                 "            <div class=\"refund-info\">" +
                 "                <h3 style=\"margin-top: 0; color: #2e7d32;\">Refund Status</h3>" +
@@ -578,8 +578,8 @@ public class EmailServiceImplementation implements EmailService{
                         <p><strong>Login Credentials:</strong></p>
                         <p>Email: %s</p>
                         <p>Temporary Password: %s</p>
-                        <p>Please use the following link to access your account:</p>
-                                                                          <a href="http://localhost:5174/login" class="button">Login to Your Account</a>
+>
+                                                   
                     </div>
                     
                   
