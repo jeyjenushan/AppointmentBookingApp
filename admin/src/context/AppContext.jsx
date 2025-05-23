@@ -82,7 +82,7 @@ const AppContextProvider = (props) => {
           setAToken(data.token);
           setAdminId(data.userDto.adminId);
           localStorage.setItem("aToken", data.token);
-          navigate("/admin-dashboard");
+          navigate("/admin");
         } else {
           toast.error("Unauthorized role.");
         }
@@ -125,7 +125,7 @@ const AppContextProvider = (props) => {
           setDToken(data.token);
           setDoctorId(data.userDto.doctorId);
           localStorage.setItem("dToken", data.token);
-          navigate("/doctor-dashboard");
+          navigate("/doctor");
         } else {
           toast.error("Unauthorized role.");
         }
