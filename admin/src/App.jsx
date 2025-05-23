@@ -21,6 +21,7 @@ import DoctorAvailabilityManager from "./pages/Admin/DoctorAvailabilityManager";
 import AddDoctor from "./pages/Admin/AddDoctor";
 import AdminLogin from "./pages/Login/AdminLogin";
 import Welcome from "./pages/Welcome";
+import AddDoctorForm from "./components/doctor/addDoctor/AddDoctorForm";
 
 const App = () => {
   const { dToken } = useContext(DoctorContext);
@@ -41,20 +42,6 @@ const App = () => {
               element={<DoctorAppointments />}
             />
             <Route path="/doctor/profile" element={<DoctorProfile />} />
-            {/* Redirect old URLs to new structure */}
-            <Route
-              path="/doctor-dashboard"
-              element={<Navigate to="/doctor/dashboard" replace />}
-            />
-            <Route
-              path="/doctor-appointments"
-              element={<Navigate to="/doctor/appointments" replace />}
-            />
-            {/* Catch-all for doctor routes */}
-            <Route
-              path="/doctor/*"
-              element={<Navigate to="/doctor/dashboard" replace />}
-            />
           </Routes>
         </div>
       </div>
@@ -73,20 +60,7 @@ const App = () => {
             <Route path="/admin/dashboard" element={<Dashboard />} />
             <Route path="/admin/appointments" element={<AllAppointments />} />
             <Route path="/admin/doctors" element={<DoctorsList />} />
-            {/* Redirect old URLs to new structure */}
-            <Route
-              path="/admin-dashboard"
-              element={<Navigate to="/admin/dashboard" replace />}
-            />
-            <Route
-              path="/all-appointments"
-              element={<Navigate to="/admin/appointments" replace />}
-            />
-            {/* Catch-all for admin routes */}
-            <Route
-              path="/admin/*"
-              element={<Navigate to="/admin/dashboard" replace />}
-            />
+            <Route path="/admin/add-doctor" element={<AddDoctor />} />
           </Routes>
         </div>
       </div>
