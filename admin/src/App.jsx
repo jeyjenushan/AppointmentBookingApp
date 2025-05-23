@@ -19,12 +19,6 @@ import { useContext } from "react";
 import { DoctorContext } from "./context/DoctorContext";
 import { AdminContext } from "./context/AdminContext";
 
-
-
-
-
-
-
 function App() {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
