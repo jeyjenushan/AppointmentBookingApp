@@ -19,6 +19,7 @@ import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
 
 import DoctorAvailabilityManager from "./pages/Admin/DoctorAvailabilityManager";
 import AddDoctor from "./pages/Admin/AddDoctor";
+import RememberMe from "./components/Login/RememberMe";
 
 const App = () => {
   const { dToken } = useContext(DoctorContext);
@@ -88,6 +89,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="./RememberMe" element={<RememberMe />} />
       </Routes>
     </>
   );

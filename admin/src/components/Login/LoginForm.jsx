@@ -52,7 +52,7 @@ const LoginForm = () => {
       <div className="flex justify-between items-center w-full">
         <RememberMe remember={remember} setRemember={setRemember} />
 
-        <a href="/forgot-Password" className="text-primary hover:underline">
+        <a href="/forgotPassword" className="text-primary hover:underline">
           Forgot password?
         </a>
       </div>
