@@ -12,13 +12,13 @@ const Welcome = () => {
         </p>
         <div className="flex flex-col gap-4">
           <Link
-            to="/doctor-Login"
+            to="/doctor-login"
             className="bg-primary  text-white font-semibold py-3 px-6 rounded-lg transition duration-300"
           >
             Doctor Login
           </Link>
           <Link
-            to="/admin-Login"
+            to="/admin-login"
             className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300"
           >
             Admin Login
