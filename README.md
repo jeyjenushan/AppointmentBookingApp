@@ -51,10 +51,16 @@ _A secure, role-based platform for managing hospital appointments with real-time
 
 Ensure the following are installed on your machine:
 
-- Node.js v16+
-- Java JDK 11+
-- MySQL 8.0+
-- Maven
+- Docker
+- Node.js v16+ (for local development)
+- Java JDK 11+ (for local development)
+- Maven (for local development)
+
+### 🐳 Docker Deployment (Recommended)
+
+1. Pull the Docker image from Docker Hub:
+   ```bash
+   docker pull jenushan264/patientappointmentbooking
 
 ### 📁 Clone the Repository
 
