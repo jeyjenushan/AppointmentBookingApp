@@ -1,4 +1,3 @@
-import React, { useContext } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -21,63 +20,77 @@ import DoctorAvailabilityManager from "./pages/Admin/DoctorAvailabilityManager";
 import AddDoctor from "./pages/Admin/AddDoctor";
 import AdminLogin from "./pages/Login/AdminLogin";
 import Welcome from "./pages/Welcome";
-import AddDoctorForm from "./components/doctor/addDoctor/AddDoctorForm";
 
 const App = () => {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
 
-  // Doctor Routes - All start with /doctor/
-  if (dToken) {
-    return (
-      <div className="bg-[#F8F9FD]">
-        <ToastContainer />
-        <Navbar />
-        <div className="flex items-start">
-          <Sidebar />
-          <Routes>
-            <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-            <Route
-              path="/doctor/appointments"
-              element={<DoctorAppointments />}
-            />
-            <Route path="/doctor/profile" element={<DoctorProfile />} />
-          </Routes>
-        </div>
-      </div>
-    );
-  }
+  return dToken || aToken ? (
+    <div className="bg-[#F8F9FD]">
+      <ToastContainer />
+      <Navbar />
+      <div className="flex items-start">
+        <Sidebar />
+        <Routes>
+          <Route
+            path="/admin-dashboard"
+            element={aToken ? <Dashboard /> : <Navigate to="/adminLogin" />}
+          />
+          <Route
+            path="/doctor-dashboard"
+            element={
+              dToken ? <DoctorDashboard /> : <Navigate to="/doctorLogin" />
+            }
+          />
+          <Route
+            path="/all-appointments"
+            element={
+              aToken ? <AllAppointments /> : <Navigate to="/adminLogin" />
+            }
+          />
+          <Route
+            path="/doctor-list"
+            element={aToken ? <DoctorsList /> : <Navigate to="/doctorLogin" />}
+          />
+          <Route
+            path="/doctor-list/:doctorId/availability"
+            element={
+              aToken ? (
+                <DoctorAvailabilityManager />
+              ) : (
+                <Navigate to="/adminLogin" />
+              )
+            }
+          />
+          <Route
+            path="/add-doctor"
+            element={aToken ? <AddDoctor /> : <Navigate to="/adminLogin" />}
+          />
 
-  // Admin Routes - All start with /admin/
-  if (aToken) {
-    return (
-      <div className="bg-[#F89FD]">
-        <ToastContainer />
-        <Navbar />
-        <div className="flex items-start">
-          <Sidebar />
-          <Routes>
-            <Route path="/admin/dashboard" element={<Dashboard />} />
-            <Route path="/admin/appointments" element={<AllAppointments />} />
-            <Route path="/admin/doctors" element={<DoctorsList />} />
-            <Route path="/admin/add-doctor" element={<AddDoctor />} />
-          </Routes>
-        </div>
+          <Route
+            path="/doctor-appointments"
+            element={
+              dToken ? <DoctorAppointments /> : <Navigate to="/doctorLogin" />
+            }
+          />
+          <Route
+            path="/doctor-profile"
+            element={
+              dToken ? <DoctorProfile /> : <Navigate to="/doctorLogin" />
+            }
+          />
+        </Routes>
       </div>
-    );
-  }
-
-  // Public Routes
-  return (
+    </div>
+  ) : (
     <>
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Welcome />} />
-        <Route path="/login/doctor" element={<Login />} />
-        <Route path="/login/admin" element={<AdminLogin />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        {/* Redirect all other routes to doctor login */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/doctorLogin" element={<Login />} />
+        <Route path="/adminLogin" element={<AdminLogin />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="*" element={<Welcome />} />
       </Routes>
     </>
   );

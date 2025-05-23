@@ -17,14 +17,24 @@ const Sidebar = () => {
         : "hover:bg-gray-50"
     }`;
 
-  // Only show one menu based on which token exists
-  const menuItems = aToken ? adminMenuItems : dToken ? doctorMenuItems : [];
-
   return (
     <div className="min-h-screen bg-white border-r w-full md:w-auto sticky top-0">
-      {menuItems.length > 0 && (
+      {aToken && (
         <ul className="text-[#515151] mt-5">
-          {menuItems.map((item, index) => (
+          {adminMenuItems.map((item, index) => (
+            <li key={index}>
+              <NavLink to={item.to} className={navLinkStyles}>
+                <img className="min-w-5 w-5" src={item.icon} alt={item.text} />
+                <p className="hidden md:block">{item.text}</p>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {dToken && (
+        <ul className="text-[#515151] mt-5">
+          {doctorMenuItems.map((item, index) => (
             <li key={index}>
               <NavLink to={item.to} className={navLinkStyles}>
                 <img className="min-w-5 w-5" src={item.icon} alt={item.text} />
@@ -37,5 +47,3 @@ const Sidebar = () => {
     </div>
   );
 };
-
-export default Sidebar;
