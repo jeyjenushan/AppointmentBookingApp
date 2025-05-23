@@ -184,7 +184,6 @@ const AppContextProvider = (props) => {
     sendOtp,
     verifyOtp,
     resetPassword,
-    doctorLogin,
   };
 
   return (
