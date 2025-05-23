@@ -5,7 +5,6 @@ import { AdminContext } from "../../../context/AdminContext";
 import { adminMenuItems } from "./adminMenuItems";
 import { doctorMenuItems } from "./doctorMenuItems";
 
-
 const Sidebar = () => {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
