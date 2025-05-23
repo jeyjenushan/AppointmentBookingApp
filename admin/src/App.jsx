@@ -28,25 +28,13 @@ function App() {
   const { aToken } = useContext(AdminContext);
   const location = useLocation();
 
-  const isAuthenticated = dToken || aToken;
-
-  const hideNavbarSidebarRoutes = [
-    "/adminLogin",
-    "/doctorLogin",
-    "/forgotPassword",
-    "/",
-  ];
-  const shouldHideNavbarSidebar = hideNavbarSidebarRoutes.includes(
-    location.pathname
-  );
-
   return (
     <div className="bg-[#F8F9FD] min-h-screen">
       <ToastContainer />
-      {!shouldHideNavbarSidebar && <Navbar />}
+      <Navbar />
       <div className="flex items-start">
-        {!shouldHideNavbarSidebar && <Sidebar />}
-        <div className={`${!shouldHideNavbarSidebar ? "p-4 w-full" : ""}`}>
+        <Sidebar />
+        <div className="p-4 w-full">
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Welcome />} />
