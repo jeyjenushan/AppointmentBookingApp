@@ -54,7 +54,7 @@ function App() {
               }
             />
             <Route
-              path="/admin/doctor-list"
+              path="/admin/doctor"
               element={
                 aToken ? <DoctorsList /> : <Navigate to="/adminLogin" replace />
               }
