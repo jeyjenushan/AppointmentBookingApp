@@ -1,99 +1,138 @@
-import "react-toastify/dist/ReactToastify.css";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { DoctorContext } from "./context/DoctorContext";
-import { AdminContext } from "./context/AdminContext";
-import Login from "./pages/Login/Login";
-import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import "react-toastify/dist/ReactToastify.css";
+
 import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/sidebar/Sidebar";
+import Login from "./pages/Login/Login";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import AdminLogin from "./pages/Login/AdminLogin";
+import Welcome from "./pages/Welcome";
 
 import Dashboard from "./pages/Admin/Dashboard";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import AllAppointments from "./pages/Admin/AllAppointments";
 import DoctorsList from "./pages/Admin/DoctorsList";
+import AddDoctor from "./pages/Admin/AddDoctor";
+import DoctorAvailabilityManager from "./pages/Admin/DoctorAvailabilityManager";
 
 import DoctorProfile from "./pages/Doctor/DoctorProfile";
 import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
 
-import DoctorAvailabilityManager from "./pages/Admin/DoctorAvailabilityManager";
-import AddDoctor from "./pages/Admin/AddDoctor";
-import AdminLogin from "./pages/Login/AdminLogin";
-import Welcome from "./pages/Welcome";
+import { useContext } from "react";
+import { DoctorContext } from "./context/DoctorContext";
+import { AdminContext } from "./context/AdminContext";
 
-const App = () => {
+function App() {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
+  const location = useLocation();
 
-  return dToken || aToken ? (
-    <div className="bg-[#F8F9FD]">
+  const isAuthenticated = dToken || aToken;
+
+  const hideNavbarSidebarRoutes = [
+    "/adminLogin",
+    "/doctorLogin",
+    "/forgotPassword",
+    "/",
+  ];
+  const shouldHideNavbarSidebar = hideNavbarSidebarRoutes.includes(
+    location.pathname
+  );
+
+  return (
+    <div className="bg-[#F8F9FD] min-h-screen">
       <ToastContainer />
-      <Navbar />
+      {!shouldHideNavbarSidebar && <Navbar />}
       <div className="flex items-start">
-        <Sidebar />
-        <Routes>
-          <Route
-            path="/admin-dashboard"
-            element={aToken ? <Dashboard /> : <Navigate to="/adminLogin" />}
-          />
-          <Route
-            path="/doctor-dashboard"
-            element={
-              dToken ? <DoctorDashboard /> : <Navigate to="/doctorLogin" />
-            }
-          />
-          <Route
-            path="/all-appointments"
-            element={
-              aToken ? <AllAppointments /> : <Navigate to="/adminLogin" />
-            }
-          />
-          <Route
-            path="/doctor-list"
-            element={aToken ? <DoctorsList /> : <Navigate to="/doctorLogin" />}
-          />
-          <Route
-            path="/doctor-list/:doctorId/availability"
-            element={
-              aToken ? (
-                <DoctorAvailabilityManager />
-              ) : (
-                <Navigate to="/adminLogin" />
-              )
-            }
-          />
-          <Route
-            path="/add-doctor"
-            element={aToken ? <AddDoctor /> : <Navigate to="/adminLogin" />}
-          />
+        {!shouldHideNavbarSidebar && <Sidebar />}
+        <div className={`${!shouldHideNavbarSidebar ? "p-4 w-full" : ""}`}>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Welcome />} />
+            <Route path="/doctorLogin" element={<Login />} />
+            <Route path="/adminLogin" element={<AdminLogin />} />
+            <Route path="/forgotPassword" element={<ForgotPassword />} />
 
-          <Route
-            path="/doctor-appointments"
-            element={
-              dToken ? <DoctorAppointments /> : <Navigate to="/doctorLogin" />
-            }
-          />
-          <Route
-            path="/doctor-profile"
-            element={
-              dToken ? <DoctorProfile /> : <Navigate to="/doctorLogin" />
-            }
-          />
-        </Routes>
+            {/* Admin Routes */}
+            <Route
+              path="/admin"
+              element={
+                aToken ? <Dashboard /> : <Navigate to="/adminLogin" replace />
+              }
+            />
+            <Route
+              path="/admin/all-appointments"
+              element={
+                aToken ? (
+                  <AllAppointments />
+                ) : (
+                  <Navigate to="/adminLogin" replace />
+                )
+              }
+            />
+            <Route
+              path="/admin/doctor-list"
+              element={
+                aToken ? <DoctorsList /> : <Navigate to="/adminLogin" replace />
+              }
+            />
+            <Route
+              path="/admin/add-doctor"
+              element={
+                aToken ? <AddDoctor /> : <Navigate to="/adminLogin" replace />
+              }
+            />
+            <Route
+              path="/admin/doctor/:doctorId/availability"
+              element={
+                aToken ? (
+                  <DoctorAvailabilityManager />
+                ) : (
+                  <Navigate to="/adminLogin" replace />
+                )
+              }
+            />
+
+            {/* Doctor Routes */}
+            <Route
+              path="/doctor"
+              element={
+                dToken ? (
+                  <DoctorDashboard />
+                ) : (
+                  <Navigate to="/doctorLogin" replace />
+                )
+              }
+            />
+            <Route
+              path="/doctor/appointments"
+              element={
+                dToken ? (
+                  <DoctorAppointments />
+                ) : (
+                  <Navigate to="/doctorLogin" replace />
+                )
+              }
+            />
+            <Route
+              path="/doctor/profile"
+              element={
+                dToken ? (
+                  <DoctorProfile />
+                ) : (
+                  <Navigate to="/doctorLogin" replace />
+                )
+              }
+            />
+
+            {/* Catch-all fallback */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </div>
       </div>
     </div>
-  ) : (
-    <>
-      <ToastContainer />
-      <Routes>
-        <Route path="/" element={<Welcome />} />
-        <Route path="/doctorLogin" element={<Login />} />
-        <Route path="/adminLogin" element={<AdminLogin />} />
-        <Route path="/forgotPassword" element={<ForgotPassword />} />
-        <Route path="*" element={<Welcome />} />
-      </Routes>
-    </>
   );
-};
+}
 
 export default App;
