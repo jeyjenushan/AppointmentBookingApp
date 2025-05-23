@@ -3,10 +3,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/sidebar/Sidebar";
-import Login from "./pages/Login/Login";
-import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
-import AdminLogin from "./pages/Login/AdminLogin";
-import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Admin/Dashboard";
 import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import AllAppointments from "./pages/Admin/AllAppointments";
@@ -23,15 +19,8 @@ function App() {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
 
-  const hideNavbarPaths = [
-    "/adminLogin",
-    "/doctorLogin",
-    "/forgotPassword",
-    "/",
-  ];
-  const shouldHideNavbar = hideNavbarPaths.some((path) =>
-    location.pathname.startsWith(path)
-  );
+  // Hide navbar only if no token exists (not logged in)
+  const shouldHideNavbar = !dToken && !aToken;
 
   return (
     <div className="bg-[#F8F9FD] min-h-screen">
@@ -42,39 +31,38 @@ function App() {
         {!shouldHideNavbar && <Sidebar />}
         <div className="p-4 w-full">
           <Routes>
-            <Route path="/" element={<Welcome />} />
-            <Route path="/doctorLogin" element={<Login />} />
-            <Route path="/adminLogin" element={<AdminLogin />} />
-            <Route path="/forgotPassword" element={<ForgotPassword />} />
+            {/* Default route redirects to admin if admin token exists, or doctor if doctor token exists */}
+            <Route
+              path="/"
+              element={
+                aToken ? (
+                  <Navigate to="/admin" replace />
+                ) : dToken ? (
+                  <Navigate to="/doctor" replace />
+                ) : (
+                  <Navigate to="/admin" replace />
+                )
+              }
+            />
 
             {/* Admin Routes */}
             <Route
               path="/admin"
-              element={
-                aToken ? <Dashboard /> : <Navigate to="/adminLogin" replace />
-              }
+              element={aToken ? <Dashboard /> : <Navigate to="/" replace />}
             />
             <Route
               path="/admin/all-appointments"
               element={
-                aToken ? (
-                  <AllAppointments />
-                ) : (
-                  <Navigate to="/adminLogin" replace />
-                )
+                aToken ? <AllAppointments /> : <Navigate to="/" replace />
               }
             />
             <Route
               path="/admin/doctors"
-              element={
-                aToken ? <DoctorsList /> : <Navigate to="/adminLogin" replace />
-              }
+              element={aToken ? <DoctorsList /> : <Navigate to="/" replace />}
             />
             <Route
               path="/admin/add-doctor"
-              element={
-                aToken ? <AddDoctor /> : <Navigate to="/adminLogin" replace />
-              }
+              element={aToken ? <AddDoctor /> : <Navigate to="/" replace />}
             />
             <Route
               path="/admin/doctor/:doctorId/availability"
@@ -82,7 +70,7 @@ function App() {
                 aToken ? (
                   <DoctorAvailabilityManager />
                 ) : (
-                  <Navigate to="/adminLogin" replace />
+                  <Navigate to="/" replace />
                 )
               }
             />
@@ -91,32 +79,18 @@ function App() {
             <Route
               path="/doctor"
               element={
-                dToken ? (
-                  <DoctorDashboard />
-                ) : (
-                  <Navigate to="/doctorLogin" replace />
-                )
+                dToken ? <DoctorDashboard /> : <Navigate to="/" replace />
               }
             />
             <Route
               path="/doctor/appointments"
               element={
-                dToken ? (
-                  <DoctorAppointments />
-                ) : (
-                  <Navigate to="/doctorLogin" replace />
-                )
+                dToken ? <DoctorAppointments /> : <Navigate to="/" replace />
               }
             />
             <Route
               path="/doctor/profile"
-              element={
-                dToken ? (
-                  <DoctorProfile />
-                ) : (
-                  <Navigate to="/doctorLogin" replace />
-                )
-              }
+              element={dToken ? <DoctorProfile /> : <Navigate to="/" replace />}
             />
 
             {/* Catch-all fallback */}
