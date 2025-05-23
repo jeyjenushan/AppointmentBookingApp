@@ -23,12 +23,18 @@ function App() {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
 
+  const hideNavbarPaths = ["/adminLogin", "/doctorLogin", "/forgotPassword"];
+  const shouldHideNavbar = hideNavbarPaths.some((path) =>
+    location.pathname.startsWith(path)
+  );
+
   return (
     <div className="bg-[#F8F9FD] min-h-screen">
       <ToastContainer />
-      <Navbar />
+
+      {!shouldHideNavbar && <Navbar />}
       <div className="flex items-start">
-        <Sidebar />
+        {!shouldHideNavbar && <Sidebar />}
         <div className="p-4 w-full">
           <Routes>
             <Route path="/" element={<Welcome />} />
