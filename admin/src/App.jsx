@@ -26,7 +26,7 @@ const App = () => {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
 
-  // Doctor Routes - Completely separate structure
+  // Doctor Routes - All start with /doctor/
   if (dToken) {
     return (
       <div className="bg-[#F8F9FD]">
@@ -35,51 +35,75 @@ const App = () => {
         <div className="flex items-start">
           <Sidebar />
           <Routes>
-            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+            <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
             <Route
-              path="/doctor-appointments"
+              path="/doctor/appointments"
               element={<DoctorAppointments />}
             />
-            <Route path="/doctor-profile" element={<DoctorProfile />} />
-            {/* Redirect any unmatched doctor routes to dashboard */}
-            <Route path="*" element={<Navigate to="/doctor-dashboard" />} />
+            <Route path="/doctor/profile" element={<DoctorProfile />} />
+            {/* Redirect old URLs to new structure */}
+            <Route
+              path="/doctor-dashboard"
+              element={<Navigate to="/doctor/dashboard" replace />}
+            />
+            <Route
+              path="/doctor-appointments"
+              element={<Navigate to="/doctor/appointments" replace />}
+            />
+            {/* Catch-all for doctor routes */}
+            <Route
+              path="/doctor/*"
+              element={<Navigate to="/doctor/dashboard" replace />}
+            />
           </Routes>
         </div>
       </div>
     );
   }
 
-  // Admin Routes - Completely separate structure
+  // Admin Routes - All start with /admin/
   if (aToken) {
     return (
-      <div className="bg-[#F8F9FD]">
+      <div className="bg-[#F89FD]">
         <ToastContainer />
         <Navbar />
         <div className="flex items-start">
           <Sidebar />
           <Routes>
-            <Route path="/admin-dashboard" element={<Dashboard />} />
-            <Route path="/all-appointments" element={<AllAppointments />} />
-            <Route path="/doctor-list" element={<DoctorsList />} />
-            {/* Redirect any unmatched admin routes to dashboard */}
-            <Route path="*" element={<Navigate to="/admin-dashboard" />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/appointments" element={<AllAppointments />} />
+            <Route path="/admin/doctors" element={<DoctorsList />} />
+            {/* Redirect old URLs to new structure */}
+            <Route
+              path="/admin-dashboard"
+              element={<Navigate to="/admin/dashboard" replace />}
+            />
+            <Route
+              path="/all-appointments"
+              element={<Navigate to="/admin/appointments" replace />}
+            />
+            {/* Catch-all for admin routes */}
+            <Route
+              path="/admin/*"
+              element={<Navigate to="/admin/dashboard" replace />}
+            />
           </Routes>
         </div>
       </div>
     );
   }
 
-  // Public Routes (when no token exists)
+  // Public Routes
   return (
     <>
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Welcome />} />
-        <Route path="/doctorLogin" element={<Login />} />
-        <Route path="/adminLogin" element={<AdminLogin />} />
-        <Route path="/forgotPassword" element={<ForgotPassword />} />
-        {/* Redirect all other routes to login */}
-        <Route path="*" element={<Navigate to="/doctorLogin" />} />
+        <Route path="/login/doctor" element={<Login />} />
+        <Route path="/login/admin" element={<AdminLogin />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/* Redirect all other routes to doctor login */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );
