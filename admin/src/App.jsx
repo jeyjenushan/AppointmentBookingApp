@@ -44,7 +44,7 @@ function App() {
 
             {/* Admin Routes */}
             <Route
-              path="/admin"
+              path="/admin/admin"
               element={
                 aToken ? <Dashboard /> : <Navigate to="/adminLogin" replace />
               }
@@ -84,7 +84,7 @@ function App() {
 
             {/* Doctor Routes */}
             <Route
-              path="/doctor"
+              path="/doctor/doctor"
               element={
                 dToken ? (
                   <DoctorDashboard />
