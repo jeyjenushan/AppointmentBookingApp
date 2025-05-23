@@ -33,61 +33,36 @@ const App = () => {
       <div className="flex items-start">
         <Sidebar />
         <Routes>
-          <Route
-            path="/admin-dashboard"
-            element={aToken ? <Dashboard /> : <Navigate to="/adminLogin" />}
-          />
-          <Route
-            path="/doctor-dashboard"
-            element={
-              dToken ? <DoctorDashboard /> : <Navigate to="/doctorLogin" />
-            }
-          />
-          <Route
-            path="/all-appointments"
-            element={
-              aToken ? <AllAppointments /> : <Navigate to="/adminLogin" />
-            }
-          />
-          <Route
-            path="/doctor-list"
-            element={aToken ? <DoctorsList /> : <Navigate to="/doctorLogin" />}
-          />
-          <Route
-            path="/doctor-list/:doctorId/availability"
-            element={
-              aToken ? (
-                <DoctorAvailabilityManager />
-              ) : (
-                <Navigate to="/adminLogin" />
-              )
-            }
-          />
-          <Route
-            path="/add-doctor"
-            element={aToken ? <AddDoctor /> : <Navigate to="/adminLogin" />}
-          />
-
-          <Route
-            path="/doctor-appointments"
-            element={
-              dToken ? <DoctorAppointments /> : <Navigate to="/doctorLogin" />
-            }
-          />
-          <Route
-            path="/doctor-profile"
-            element={
-              dToken ? <DoctorProfile /> : <Navigate to="/doctorLogin" />
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <Navigate
-                to={dToken ? "/doctor-dashboard" : "/admin-dashboard"}
+          {aToken ? (
+            <>
+              <Route path="/admin-dashboard" element={<Dashboard />} />
+              <Route path="/all-appointments" element={<AllAppointments />} />
+              <Route path="/doctor-list" element={<DoctorsList />} />
+              <Route
+                path="/doctor-list/:doctorId/availability"
+                element={<DoctorAvailabilityManager />}
               />
-            }
-          />
+              <Route path="/add-doctor" element={<AddDoctor />} />
+              <Route path="*" element={<Navigate to="/admin-dashboard" />} />
+            </>
+          ) : (
+            <Route path="/adminLogin" element={<AdminLogin />} />
+          )}
+
+          {/* Doctor Routes */}
+          {dToken ? (
+            <>
+              <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+              <Route
+                path="/doctor-appointments"
+                element={<DoctorAppointments />}
+              />
+              <Route path="/doctor-profile" element={<DoctorProfile />} />
+              <Route path="*" element={<Navigate to="/doctor-dashboard" />} />
+            </>
+          ) : (
+            <Route path="/doctorLogin" element={<Login />} />
+          )}
         </Routes>
       </div>
     </div>
