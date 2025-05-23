@@ -39,12 +39,23 @@ const DoctorDashboard = () => {
   } = useContext(DoctorContext);
   const { slotDateFormat, currency } = useContext(AppContext);
   const [activeTab, setActiveTab] = useState("overview");
-
   useEffect(() => {
-    if (dToken) {
+    if (!dToken) {
+      // Check storage as fallback
+      const storedToken = localStorage.getItem("doctorToken");
+      if (storedToken) {
+        getDashData();
+      } else {
+        navigate("/doctor/login");
+      }
+    } else {
       getDashData();
     }
   }, [dToken]);
+
+  if (!dToken && !localStorage.getItem("doctorToken")) {
+    return <div>Redirecting to login...</div>;
+  }
 
   if (!dashData) return <div className="m-5">Loading...</div>;
 
