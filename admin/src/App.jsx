@@ -23,7 +23,7 @@ function App() {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
 
-  const hideNavbarPaths = ["/adminLogin", "/doctorLogin", "/forgotPassword"];
+  const hideNavbarPaths = ["/adminLogin", "/doctorLogin", "/forgotPassword","/"];
   const shouldHideNavbar = hideNavbarPaths.some((path) =>
     location.pathname.startsWith(path)
   );
