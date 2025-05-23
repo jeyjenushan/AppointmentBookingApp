@@ -20,15 +20,15 @@ function App() {
   const { aToken } = useContext(AdminContext);
 
   // Hide navbar only if no token exists (not logged in)
-  const shouldHideNavbar = !dToken && !aToken;
+  const shouldHideNavbar = dToken || aToken;
 
   return (
     <div className="bg-[#F8F9FD] min-h-screen">
       <ToastContainer />
 
-      {!shouldHideNavbar && <Navbar />}
+      {shouldHideNavbar && <Navbar />}
       <div className="flex items-start">
-        {!shouldHideNavbar && <Sidebar />}
+        {shouldHideNavbar && <Sidebar />}
         <div className="p-4 w-full">
           <Routes>
             {/* Default route redirects to admin if admin token exists, or doctor if doctor token exists */}
