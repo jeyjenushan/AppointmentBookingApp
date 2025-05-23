@@ -64,6 +64,10 @@ const AppContextProvider = (props) => {
         toast.error("Patient login is not allowed on this portal.");
         return;
       }
+      if (role === "DOCTOR") {
+        toast.error("Patient login is not allowed on this portal.");
+        return;
+      }
 
       if (data.statusCode === 200) {
         if (remember) {

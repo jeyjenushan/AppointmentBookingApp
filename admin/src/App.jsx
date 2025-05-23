@@ -35,14 +35,12 @@ const App = () => {
         <Routes>
           <Route
             path="/admin-dashboard"
-            element={
-              aToken ? <Dashboard /> : <Navigate to="/doctor-dashboard" />
-            }
+            element={aToken ? <Dashboard /> : <Navigate to="/adminLogin" />}
           />
           <Route
             path="/doctor-dashboard"
             element={
-              dToken ? <DoctorDashboard /> : <Navigate to="/admin-dashboard" />
+              dToken ? <DoctorDashboard /> : <Navigate to="/doctorLogin" />
             }
           />
           <Route
