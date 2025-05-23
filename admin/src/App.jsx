@@ -9,64 +9,57 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/sidebar/Sidebar";
 
-import Dashboard from "./pages/Admin/Dashboard";
-import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
-import AllAppointments from "./pages/Admin/AllAppointments";
-import DoctorsList from "./pages/Admin/DoctorsList";
-
-import DoctorProfile from "./pages/Doctor/DoctorProfile";
-import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
-
-import DoctorAvailabilityManager from "./pages/Admin/DoctorAvailabilityManager";
-import AddDoctor from "./pages/Admin/AddDoctor";
-import AdminLogin from "./pages/Login/AdminLogin";
-import Welcome from "./pages/Welcome";
+// Import your page components here...
 
 const App = () => {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
 
-  return dToken || aToken ? (
-    <div className="bg-[#F8F9FD]">
-      <ToastContainer />
-      <Navbar />
-      <div className="flex items-start">
-        <Sidebar />
-        <Routes>
-          {aToken ? (
-            <>
-              <Route path="/admin-dashboard" element={<Dashboard />} />
-              <Route path="/all-appointments" element={<AllAppointments />} />
-              <Route path="/doctor-list" element={<DoctorsList />} />
-              <Route
-                path="/doctor-list/:doctorId/availability"
-                element={<DoctorAvailabilityManager />}
-              />
-              <Route path="/add-doctor" element={<AddDoctor />} />
-              <Route path="*" element={<Navigate to="/admin-dashboard" />} />
-            </>
-          ) : (
-            <Route path="/adminLogin" element={<AdminLogin />} />
-          )}
-
-          {/* Doctor Routes */}
-          {dToken ? (
-            <>
-              <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-              <Route
-                path="/doctor-appointments"
-                element={<DoctorAppointments />}
-              />
-              <Route path="/doctor-profile" element={<DoctorProfile />} />
-              <Route path="*" element={<Navigate to="/doctor-dashboard" />} />
-            </>
-          ) : (
-            <Route path="/doctorLogin" element={<Login />} />
-          )}
-        </Routes>
+  // Doctor Routes - Completely separate structure
+  if (dToken) {
+    return (
+      <div className="bg-[#F8F9FD]">
+        <ToastContainer />
+        <Navbar />
+        <div className="flex items-start">
+          <Sidebar />
+          <Routes>
+            <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
+            <Route
+              path="/doctor-appointments"
+              element={<DoctorAppointments />}
+            />
+            <Route path="/doctor-profile" element={<DoctorProfile />} />
+            {/* Redirect any unmatched doctor routes to dashboard */}
+            <Route path="*" element={<Navigate to="/doctor-dashboard" />} />
+          </Routes>
+        </div>
       </div>
-    </div>
-  ) : (
+    );
+  }
+
+  // Admin Routes - Completely separate structure
+  if (aToken) {
+    return (
+      <div className="bg-[#F8F9FD]">
+        <ToastContainer />
+        <Navbar />
+        <div className="flex items-start">
+          <Sidebar />
+          <Routes>
+            <Route path="/admin-dashboard" element={<Dashboard />} />
+            <Route path="/all-appointments" element={<AllAppointments />} />
+            <Route path="/doctor-list" element={<DoctorsList />} />
+            {/* Redirect any unmatched admin routes to dashboard */}
+            <Route path="*" element={<Navigate to="/admin-dashboard" />} />
+          </Routes>
+        </div>
+      </div>
+    );
+  }
+
+  // Public Routes (when no token exists)
+  return (
     <>
       <ToastContainer />
       <Routes>
@@ -74,6 +67,8 @@ const App = () => {
         <Route path="/doctorLogin" element={<Login />} />
         <Route path="/adminLogin" element={<AdminLogin />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
+        {/* Redirect all other routes to login */}
+        <Route path="*" element={<Navigate to="/doctorLogin" />} />
       </Routes>
     </>
   );
