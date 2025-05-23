@@ -1,76 +1,56 @@
 import React, { useContext } from "react";
+import { assets } from "../../assets/assets";
 
-import RememberMe from "./RememberMe";
-import { Oval } from "react-loader-spinner";
-import { useLogin } from "../../hooks/login/useLogin";
-import { AppContext } from "../../context/AppContext";
+import { useNavigate } from "react-router-dom";
+import { DoctorContext } from "../../context/DoctorContext";
+import { AdminContext } from "../../context/AdminContext";
+import { Bell } from "lucide-react";
+import NotificationBadge from "./NotificationBadge ";
 
-const LoginForm = () => {
-  const { formData, remember, handleChange, setRemember, onSubmitHandler } =
-    useLogin();
-  const { loading } = useContext(AppContext);
+const Navbar = () => {
+  const { dToken, setDToken } = useContext(DoctorContext);
+  const { aToken, setAToken } = useContext(AdminContext);
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    navigate("/");
+    dToken && setDToken("");
+    dToken && localStorage.removeItem("dToken");
+    aToken && setAToken("");
+    aToken && localStorage.removeItem("aToken");
+  };
 
   return (
-    <form onSubmit={onSubmitHandler} className="w-full space-y-4">
-      <div className="w-full">
-        <label htmlFor="email" className="block text-gray-700">
-          Email
-        </label>
-        <input
-          id="email"
-          onChange={handleChange}
-          value={formData.email}
-          className="border border-gray-300 rounded w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="email"
-          name="email"
-          autoComplete="current-email"
-          required
+    <div className="flex justify-between items-center px-4 sm:px-10 py-3 border-b bg-white">
+      <div className="flex items-center gap-2 text-xs">
+        <img
+          onClick={() => navigate("/")}
+          className="w-36 sm:w-40 cursor-pointer"
+          src={assets.admin_logo}
+          alt=""
         />
+        <p className="border px-2.5 py-0.5 rounded-full border-gray-500 text-gray-600">
+          {aToken ? "Admin" : "Doctor"}
+        </p>
       </div>
 
-      <div className="w-full">
-        <label htmlFor="password" className="block text-gray-700">
-          Password
-        </label>
-        <input
-          id="password"
-          onChange={handleChange}
-          value={formData.password}
-          className="border border-gray-300 rounded w-full p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="password"
-          name="password"
-          required
-          autoComplete="current-password"
-        />
-      </div>
-
-      <div className="flex justify-between items-center w-full">
-        <RememberMe remember={remember} setRemember={setRemember} />
-
-        <a href="/forgotPassword" className="text-blue-600 hover:underline">
-          Forgot password?
-        </a>
-      </div>
-
-      <button
-        type="submit"
-        className="bg-blue-600 text-white w-full py-2 rounded-md text-base hover:bg-blue-700 transition-colors flex justify-center items-center"
-        disabled={loading}
-      >
-        {loading ? (
-          <Oval
-            height={20}
-            width={20}
-            color="white"
-            visible={true}
-            ariaLabel="oval-loading"
-          />
-        ) : (
-          "Sign In"
+      <div className="flex items-center gap-4">
+        {dToken && (
+          <div className="relative cursor-pointer">
+            <NotificationBadge />
+          </div>
         )}
-      </button>
-    </form>
+
+        <button
+          onClick={() => logout()}
+          className="bg-primary text-white text-sm px-10 py-2 rounded-full"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
   );
 };
 
-export default LoginForm;
+export default Navbar;
