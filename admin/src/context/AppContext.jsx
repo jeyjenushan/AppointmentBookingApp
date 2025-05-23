@@ -50,95 +50,101 @@ const AppContextProvider = (props) => {
     return age;
   };
 
-  //LOGIN Admin
-  const login = async (formDataToSend, remember) => {
-    setLoading(true);
-    try {
-      const { data } = await axios.post(
-        backendUrl + "/api/login",
-        formDataToSend
-      );
-      const role = data.role;
-
-      if (role === "PATIENT") {
-        toast.error("Patient login is not allowed on this portal.");
-        return;
-      }
-      if (role === "DOCTOR") {
-        toast.error("Patient login is not allowed on this portal.");
-        return;
-      }
-
-      if (data.statusCode === 200) {
-        if (remember) {
-          localStorage.setItem("rememberedEmail", formDataToSend.email);
-          localStorage.setItem("rememberedPassword", formDataToSend.password);
-        } else {
-          localStorage.removeItem("rememberedEmail");
-          localStorage.removeItem("rememberedPassword");
-        }
-
-        if (role === "ADMIN") {
-          setAToken(data.token);
-          setAdminId(data.userDto.adminId);
-          localStorage.setItem("aToken", data.token);
-          navigate("/admin");
-        } else {
-          toast.error("Unauthorized role.");
-        }
-      } else {
-        throw new Error(data.message || "Login failed");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Login failed. Please check your credentials.");
-    } finally {
-      setLoading(false);
+// Admin Login
+const login = async (formDataToSend, remember) => {
+  setLoading(true);
+  try {
+    const { data } = await axios.post(
+      backendUrl + "/api/login",
+      formDataToSend
+    );
+    
+    if (data.statusCode !== 200) {
+      throw new Error(data.message || "Login failed");
     }
-  };
 
-  //Login doctor
-  const doctorLogin = async (formDataToSend, remember) => {
-    setLoading(true);
-    try {
-      const { data } = await axios.post(
-        backendUrl + "/api/login",
-        formDataToSend
-      );
-      const role = data.role;
+    const role = data.role;
 
-      if (role === "PATIENT") {
-        toast.error("Patient login is not allowed on this portal.");
-        return;
-      }
-
-      if (data.statusCode === 200) {
-        if (remember) {
-          localStorage.setItem("rememberedEmail", formDataToSend.email);
-          localStorage.setItem("rememberedPassword", formDataToSend.password);
-        } else {
-          localStorage.removeItem("rememberedEmail");
-          localStorage.removeItem("rememberedPassword");
-        }
-
-        if (role === "DOCTOR") {
-          setDToken(data.token);
-          setDoctorId(data.userDto.doctorId);
-          localStorage.setItem("dToken", data.token);
-          navigate("/doctor");
-        } else {
-          toast.error("Unauthorized role.");
-        }
-      } else {
-        throw new Error(data.message || "Login failed");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Login failed. Please check your credentials.");
-    } finally {
-      setLoading(false);
+    // Validate role
+    if (role !== "ADMIN") {
+      toast.error("Only admin users can login through this portal");
+      return;
     }
-  };
+
+    // Handle remember me functionality
+    if (remember) {
+      localStorage.setItem("rememberedEmail", formDataToSend.email);
+      localStorage.setItem("rememberedPassword", formDataToSend.password);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberedPassword");
+    }
+
+    // Set auth state
+    setAToken(data.token);
+    setAdminId(data.userDto.adminId);
+    localStorage.setItem("aToken", data.token);
+    
+    // Redirect
+    navigate("/admin");
+    toast.success("Login successful!");
+
+  } catch (err) {
+    console.error("Login error:", err);
+    const errorMessage = err.response?.data?.message || "Login failed. Please check your credentials.";
+    toast.error(errorMessage);
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Doctor Login
+const doctorLogin = async (formDataToSend, remember) => {
+  setLoading(true);
+  try {
+    const { data } = await axios.post(
+      backendUrl + "/api/login",
+      formDataToSend
+    );
+    
+    if (data.statusCode !== 200) {
+      throw new Error(data.message || "Login failed");
+    }
+
+    const role = data.role;
+
+    // Validate role
+    if (role !== "DOCTOR") {
+      toast.error("Only doctors can login through this portal");
+      return;
+    }
+
+    // Handle remember me functionality
+    if (remember) {
+      localStorage.setItem("rememberedEmail", formDataToSend.email);
+      localStorage.setItem("rememberedPassword", formDataToSend.password);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+      localStorage.removeItem("rememberedPassword");
+    }
+
+    // Set auth state
+    setDToken(data.token);
+    setDoctorId(data.userDto.doctorId);
+    localStorage.setItem("dToken", data.token);
+    
+    // Redirect
+    navigate("/doctor");
+    toast.success("Login successful!");
+
+  } catch (err) {
+    console.error("Login error:", err);
+    const errorMessage = err.response?.data?.message || "Login failed. Please check your credentials.";
+    toast.error(errorMessage);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const sendOtp = async (email) => {
     try {

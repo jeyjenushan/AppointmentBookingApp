@@ -23,7 +23,12 @@ function App() {
   const { dToken } = useContext(DoctorContext);
   const { aToken } = useContext(AdminContext);
 
-  const hideNavbarPaths = ["/adminLogin", "/doctorLogin", "/forgotPassword","/"];
+  const hideNavbarPaths = [
+    "/adminLogin",
+    "/doctorLogin",
+    "/forgotPassword",
+    "/",
+  ];
   const shouldHideNavbar = hideNavbarPaths.some((path) =>
     location.pathname.startsWith(path)
   );
@@ -44,7 +49,7 @@ function App() {
 
             {/* Admin Routes */}
             <Route
-              path="/admin/admin"
+              path="/admin"
               element={
                 aToken ? <Dashboard /> : <Navigate to="/adminLogin" replace />
               }
@@ -84,7 +89,7 @@ function App() {
 
             {/* Doctor Routes */}
             <Route
-              path="/doctor/doctor"
+              path="/doctor"
               element={
                 dToken ? (
                   <DoctorDashboard />
