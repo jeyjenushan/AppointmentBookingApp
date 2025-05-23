@@ -9,7 +9,18 @@ import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Navbar from "./components/common/Navbar";
 import Sidebar from "./components/common/sidebar/Sidebar";
 
-// Import your page components here...
+import Dashboard from "./pages/Admin/Dashboard";
+import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
+import AllAppointments from "./pages/Admin/AllAppointments";
+import DoctorsList from "./pages/Admin/DoctorsList";
+
+import DoctorProfile from "./pages/Doctor/DoctorProfile";
+import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
+
+import DoctorAvailabilityManager from "./pages/Admin/DoctorAvailabilityManager";
+import AddDoctor from "./pages/Admin/AddDoctor";
+import AdminLogin from "./pages/Login/AdminLogin";
+import Welcome from "./pages/Welcome";
 
 const App = () => {
   const { dToken } = useContext(DoctorContext);
