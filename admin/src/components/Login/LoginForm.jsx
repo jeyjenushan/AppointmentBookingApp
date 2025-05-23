@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 
 import RememberMe from "./RememberMe";
 import { Oval } from "react-loader-spinner";
@@ -6,17 +6,12 @@ import { useLogin } from "../../hooks/login/useLogin";
 import { AppContext } from "../../context/AppContext";
 
 const LoginForm = () => {
-  const {
-    formData,
-    remember,
-    handleChange,
-    setRemember,
-    onSubmitDoctorHandler,
-  } = useLogin();
+  const { formData, remember, handleChange, setRemember, onSubmitHandler } =
+    useLogin();
   const { loading } = useContext(AppContext);
 
   return (
-    <form onSubmit={onSubmitDoctorHandler} className="w-full space-y-4">
+    <form onSubmit={onSubmitHandler} className="w-full space-y-4">
       <div className="w-full">
         <label htmlFor="email" className="block text-gray-700">
           Email
@@ -52,14 +47,14 @@ const LoginForm = () => {
       <div className="flex justify-between items-center w-full">
         <RememberMe remember={remember} setRemember={setRemember} />
 
-        <a href="/forgotPassword" className="text-primary hover:underline">
+        <a href="/forgotPassword" className="text-blue-600 hover:underline">
           Forgot password?
         </a>
       </div>
 
       <button
         type="submit"
-        className="bg-[#5F6FFF] text-white w-full py-2 rounded-md text-base hover:bg-[#5F6FFF] transition-colors flex justify-center items-center"
+        className="bg-blue-600 text-white w-full py-2 rounded-md text-base hover:bg-blue-700 transition-colors flex justify-center items-center"
         disabled={loading}
       >
         {loading ? (
